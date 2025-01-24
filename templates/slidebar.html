@@ -133,10 +133,10 @@
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
-            <a href="{{ url_for('tasks') }}" class="brand-link">
+            <a href="{{ url_for('home') }}" class="brand-link">
                 <img src="{{ url_for('static', filename='dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo"
                     class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light">MIS TAREAS</span>
+                <span class="brand-text font-weight-light">Reconocimiento Facial</span>
             </a>
 
             <!-- Sidebar -->
@@ -149,7 +149,7 @@
 
                     </div>
                     <div class="info">
-                        <a href="{{ url_for('tasks') }}" class="d-block">{{ session['name'] }}
+                        <a href="" class="d-block">{{ session['name'] }}
                         </a>
                         <a href="#" class="d-block" data-toggle="modal" data-target="#uploadProfileImageModal">Cambiar
                             foto de
@@ -185,50 +185,10 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ url_for('tasks') }}" class="nav-link">
-                                <i class="nav-icon fas fa-clipboard-list"></i>
-                                <p>Tareas</p>
+                            <a href="#" class="nav-link" data-toggle="modal" data-target="#uploadProfileImageModal">
+                                <i class="nav-icon fas fa-user"></i>
+                                <p>Cambiar Foto de Perfil</p>
                             </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ url_for('groups') }}" class="nav-link">
-                                <i class="nav-icon fas fa-users"></i>
-                                <p>Gestionar Grupos</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ url_for('create_group') }}" class="nav-link">
-                                <i class="nav-icon fas fa-plus-circle"></i>
-                                <p>Crear Grupo</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link" onclick="toggleGroups();">
-                                <i class="nav-icon fas fa-layer-group"></i>
-                                <p>Mis Grupos</p>
-                                <i class="fas fa-angle-left right"></i>
-                            </a>
-
-                            <ul class="nav nav-treeview" style="display: none;" id="group-list">
-                                {% for group in user_groupsg %}
-                                <li class="nav-item d-flex justify-content-between align-items-center">
-                                    <a href="{{ url_for('group_tasks', group_id=group.id) }}"
-                                        class="nav-link d-flex align-items-center">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p class="mb-0 ml-2">{{ group.group_name }}</p>
-                                    </a>
-                                    <form action="{{ url_for('leave_group', group_id=group.id) }}" method="post"
-                                        class="d-inline">
-                                        <button type="submit" class="btn btn-link p-0 ml-n3"
-                                            onclick="return confirm('¿Estás seguro de que deseas abandonar este grupo?');">
-                                            <i class="fas fa-sign-out-alt text-danger"></i>
-                                        </button>
-                                    </form>
-                                </li>
-                                {% endfor %}
-
-
-                            </ul>
                         </li>
                 </nav>
                 <!-- /.sidebar-menu -->
@@ -273,7 +233,7 @@
             </section>
         </div>
         <footer class="main-footer">
-            <strong>GestorT</strong>
+            <strong>Reconocimiento Facial</strong>
             All rights reserved.
             <div class="float-right d-none d-sm-inline-block">
                 <b>Version</b> 1.0
