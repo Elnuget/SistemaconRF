@@ -1,0 +1,20 @@
+DEBE ASEGURARSE QUE TENGA INSTALADO PYTHON 3
+
+Primero: Descargar Python 3 en la web oficial.
+Pasos para la instalación del ambiente virtual:
+- Abrir una terminal.
+- Colocar: pip install virtualenv
+- Colocar: python -m venv EntornoV
+- Colocar: EntornoV\Scripts\activate
+pip install Flask
+pip install Flask Flask-MySQL-Connector
+pip install Flask Flask-MySQLdb
+pip install flask-socketio
+pip install Flask Flask-Mail itsdangerous
+pip install Flask-APScheduler  # Corregido: nombre correcto del paquete
+
+Nota: Si encuentra advertencias sobre face_recognition_models, puede ignorarlas 
+ya que son mensajes de deprecación que no afectan la funcionalidad.
+
+No olvidar el "Aceptar" el ambiente virtual para su uso en el proyecto.
+Para cerrar el ambiente virtual, usar el comando: deactivate.
