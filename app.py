@@ -8,6 +8,11 @@ import uuid
 from flask_mail import Mail, Message
 from random import randint
 from werkzeug.security import generate_password_hash, check_password_hash
+import cv2
+import numpy as np
+import base64
+from PIL import Image
+import io
 
 # Inicializar la aplicación Flask
 app = Flask(__name__)
@@ -76,6 +81,7 @@ def register():
         email = request.form['email']
         password = request.form['password']
         confirm_password = request.form['confirm_password']
+        profile_photo = request.form.get('profile_photo')
 
         if not name or not surnames or not email or not password or not confirm_password:
             flash('Todos los campos son obligatorios', 'danger')
@@ -97,11 +103,30 @@ def register():
         # Encriptar la contraseña
         hashed_password = generate_password_hash(password)
 
+        # Procesar la foto de perfil si existe
+        filename = None
+        if profile_photo and profile_photo.startswith('data:image'):
+            # Extraer los datos base64 de la imagen
+            import base64
+            format, imgstr = profile_photo.split(';base64,')
+            ext = format.split('/')[-1]
+            
+            # Generar nombre único para el archivo
+            filename = f"{str(uuid.uuid4())}.{ext}"
+            
+            # Decodificar y guardar la imagen
+            with open(os.path.join(app.config['UPLOAD_FOLDER'], filename), 'wb') as f:
+                f.write(base64.b64decode(imgstr))
+
         # Si el correo no está registrado, proceder con el registro
         verification_code = randint(100000, 999999)  # Generar un código de verificación de 6 dígitos
         verification_sent_time = datetime.now()  # Obtener el tiempo actual
-        sql = "INSERT INTO users (name, surnames, email, password, verification_code, verified, verification_sent_time) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-        data = (name, surnames, email, hashed_password, verification_code, False, verification_sent_time)
+        sql = """INSERT INTO users 
+                (name, surnames, email, password, verification_code, verified, 
+                verification_sent_time, profile_image) 
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"""
+        data = (name, surnames, email, hashed_password, verification_code, 
+                False, verification_sent_time, filename)
         cur.execute(sql, data)
         mysql.connection.commit()
         cur.close()
@@ -357,6 +382,44 @@ def update_notifications():
         return jsonify({'message': 'Notificaciones actualizadas correctamente'}), 200  # Retorna un mensaje de éxito como JSON
     except Exception as e:  # Maneja cualquier excepción que ocurra
         return jsonify({'error': str(e)}), 500  # Retorna un error JSON
+
+@app.route('/detect-face', methods=['POST'])
+def detect_face():
+    try:
+        # Obtener la imagen desde la solicitud
+        data = request.json['image']
+        # Convertir base64 a imagen
+        image_data = data.split(',')[1]
+        image_bytes = base64.b64decode(image_data)
+        image = Image.open(io.BytesIO(image_bytes))
+        
+        # Convertir a formato OpenCV
+        opencv_image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+        
+        # Modifica esta línea para usar la ruta absoluta
+        cascade_path = os.path.join(os.path.dirname(__file__), 
+                                  'static/haarcascade/haarcascade_frontalface_default.xml')
+        face_cascade = cv2.CascadeClassifier(cascade_path)
+        
+        if face_cascade.empty():
+            raise Exception("Error al cargar el clasificador Haar Cascade")
+            
+        # Convertir a escala de grises
+        gray = cv2.cvtColor(opencv_image, cv2.COLOR_BGR2GRAY)
+        
+        # Detectar rostros
+        faces = face_cascade.detectMultiScale(
+            gray,
+            scaleFactor=1.1,
+            minNeighbors=5,
+            minSize=(30, 30)
+        )
+        
+        # Retornar si se detectó un rostro
+        return jsonify({'face_detected': len(faces) > 0})
+    
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -12,9 +12,14 @@ pip install Flask Flask-MySQLdb
 pip install flask-socketio
 pip install Flask Flask-Mail itsdangerous
 pip install Flask-APScheduler  # Corregido: nombre correcto del paquete
+pip install opencv-python
 
 Nota: Si encuentra advertencias sobre face_recognition_models, puede ignorarlas 
 ya que son mensajes de deprecación que no afectan la funcionalidad.
+
+Para la detección y retención de rostros, el sistema utiliza OpenCV (opencv-python),
+una biblioteca robusta de visión por computadora que permite el procesamiento 
+de imágenes y detección facial en tiempo real.
 
 No olvidar el "Aceptar" el ambiente virtual para su uso en el proyecto.
 Para cerrar el ambiente virtual, usar el comando: deactivate.

@@ -11,6 +11,29 @@
     integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
     crossorigin="anonymous"></script>
   <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+  <style>
+    #camera-container {
+      width: 320px;
+      margin: 0 auto;
+      position: relative;
+    }
+    #webcam {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    #canvas {
+      display: none;
+    }
+    #face-status {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 5px;
+      background: rgba(0,0,0,0.5);
+      color: white;
+      border-radius: 5px;
+    }
+  </style>
 </head>
 <body>
   <main class="d-flex">
@@ -29,7 +52,18 @@
           {% endif %}
           {% endwith %}
 
-          <form action="/register" method="post">
+          <div id="camera-container" class="text-center mb-4">
+            <video id="webcam" autoplay playsinline></video>
+            <canvas id="canvas"></canvas>
+            <div id="face-status">No se detecta rostro</div>
+            <div class="btn-group w-100" role="group">
+              <button type="button" id="startCamera" class="btn btn-primary">Iniciar Cámara</button>
+              <button type="button" id="takePhoto" class="btn btn-success" disabled>Tomar Foto</button>
+              <button type="button" id="retakePhoto" class="btn btn-warning" style="display: none;">Nueva Foto</button>
+            </div>
+          </div>
+
+          <form action="/register" method="post" enctype="multipart/form-data">
             <h3 class="text-center">Sistema de Reconocimiento Facial</h3>
             <h5 class="text-center">Registro de Usuario</h5>
             <label>Nombre</label>
@@ -42,6 +76,7 @@
             <input type="password" class="form-control mb-3" name="password" required>
             <label>Confirmar Contraseña</label>
             <input type="password" class="form-control mb-3" name="confirm_password" required>
+            <input type="hidden" name="profile_photo" id="profile_photo">
             <button type="submit" class="btn btn-success w-100">Registrarse</button>
           </form>
           <form action="/" method="get">
@@ -51,5 +86,102 @@
       </div>
     </div>
   </main>
+
+  <script>
+    let stream = null;
+    let faceDetected = false;
+    const video = document.getElementById('webcam');
+    const canvas = document.getElementById('canvas');
+    const startButton = document.getElementById('startCamera');
+    const takePhotoButton = document.getElementById('takePhoto');
+    const retakePhotoButton = document.getElementById('retakePhoto');
+    const profilePhotoInput = document.getElementById('profile_photo');
+    const faceStatus = document.getElementById('face-status');
+
+    startButton.addEventListener('click', async () => {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        video.srcObject = stream;
+        startButton.disabled = true;
+        
+        // Iniciar detección facial
+        startFaceDetection();
+      } catch (err) {
+        console.error('Error al acceder a la cámara:', err);
+        alert('Error al acceder a la cámara');
+      }
+    });
+
+    async function startFaceDetection() {
+      while (video.srcObject) {
+        try {
+          const response = await fetch('/detect-face', {
+            method: 'POST',
+            body: JSON.stringify({
+              image: getVideoFrame()
+            }),
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
+          
+          const result = await response.json();
+          faceDetected = result.face_detected;
+          
+          faceStatus.textContent = faceDetected ? 'Rostro detectado' : 'No se detecta rostro';
+          faceStatus.style.backgroundColor = faceDetected ? 'rgba(0,255,0,0.5)' : 'rgba(255,0,0,0.5)';
+          takePhotoButton.disabled = !faceDetected;
+          
+          await new Promise(resolve => setTimeout(resolve, 100));
+        } catch (error) {
+          console.error('Error en la detección facial:', error);
+        }
+      }
+    }
+
+    function getVideoFrame() {
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      canvas.getContext('2d').drawImage(video, 0, 0);
+      return canvas.toDataURL('image/jpeg');
+    }
+
+    takePhotoButton.addEventListener('click', () => {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      canvas.getContext('2d').drawImage(video, 0, 0);
+      
+      // Convertir la imagen a base64
+      const photoData = canvas.toDataURL('image/jpeg');
+      profilePhotoInput.value = photoData;
+      
+      // Mostrar la foto tomada
+      video.style.display = 'none';
+      canvas.style.display = 'block';
+      takePhotoButton.style.display = 'none';
+      retakePhotoButton.style.display = 'block';
+      
+      // Detener la cámara
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+      }
+    });
+
+    retakePhotoButton.addEventListener('click', async () => {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        video.srcObject = stream;
+        video.style.display = 'block';
+        canvas.style.display = 'none';
+        takePhotoButton.style.display = 'block';
+        retakePhotoButton.style.display = 'none';
+        profilePhotoInput.value = '';
+      } catch (err) {
+        console.error('Error al acceder a la cámara:', err);
+        alert('Error al acceder a la cámara');
+      }
+    });
+  </script>
 </body>
 </html>
