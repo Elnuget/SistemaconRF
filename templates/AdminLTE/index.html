@@ -298,84 +298,6 @@
 
   </script>
   <script>
-    document.getElementById('upload-profile-form').addEventListener('submit', function (event) {
-      event.preventDefault(); // Evita que el formulario se envíe normalmente
-      const formData = new FormData(this);
-
-      fetch(this.action, {
-        method: 'POST',
-        body: formData
-      })
-        .then(response => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            return response.json().then(data => Promise.reject(data.error)); // Rechaza la promesa con el mensaje de error del servidor
-          }
-        })
-        .then(data => {
-          fetchProfileImage(); // Actualiza la imagen de perfil después de cargarla correctamente
-          Swal.fire({
-            icon: 'success',
-            title: 'Éxito',
-            text: data.message
-          }).then((result) => {
-            if (result.isConfirmed) {
-              window.location.reload(); // Reinicia la página después de cerrar el mensaje
-            }
-          });
-        })
-        .catch(error => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: error // Muestra el mensaje de error específico del servidor
-          });
-        });
-    });
-  </script>
-
-
-
-
-  <script>
-    document.getElementById('file').addEventListener('change', function (event) {
-      const fileInput = event.target;
-      const file = fileInput.files[0];
-      const fileSizeMB = file.size / (1024 * 1024); // Convertir el tamaño del archivo a MB
-      document.cookie = `file_size_mb=${fileSizeMB}; path=/`; // Guardar el tamaño del archivo en una cookie
-    });
-  </script>
-  <!-- Bootstrap 4 -->
-  <script src="{{ url_for('static', filename='plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-  <!-- ChartJS -->
-  <script src="{{ url_for('static', filename='plugins/chart.js/Chart.min.js') }}"></script>
-  <!-- Sparkline -->
-  <script src="{{ url_for('static', filename='plugins/sparklines/sparkline.js') }}"></script>
-  <!-- JQVMap -->
-  <script src="{{ url_for('static', filename='plugins/jqvmap/jquery.vmap.min.js') }}"></script>
-  <script src="{{ url_for('static', filename='plugins/jqvmap/maps/jquery.vmap.usa.js') }}"></script>
-  <!-- jQuery Knob Chart -->
-  <script src="{{ url_for('static', filename='plugins/jquery-knob/jquery.knob.min.js') }}"></script>
-  <!-- daterangepicker -->
-  <script src="{{ url_for('static', filename='plugins/moment/moment.min.js') }}"></script>
-  <script src="{{ url_for('static', filename='plugins/daterangepicker/daterangepicker.js') }}"></script>
-  <!-- Tempusdominus Bootstrap 4 -->
-  <script
-    src="{{ url_for('static', filename='plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
-  <!-- Summernote -->
-  <script src="{{ url_for('static', filename='plugins/summernote/summernote-bs4.min.js') }}"></script>
-  <!-- overlayScrollbars -->
-  <script
-    src="{{ url_for('static', filename='plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
-  <!-- AdminLTE App -->
-  <script src="{{ url_for('static', filename='dist/js/adminlte.js') }}"></script>
-  <!-- AdminLTE for demo purposes -->
-  <script src="{{ url_for('static', filename='dist/js/demo.js') }}"></script>
-  <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-  <script src="{{ url_for('static', filename='dist/js/pages/dashboard.js') }}"></script>
-  <!-- Para notificaciones -->
-  <script>
     function loadNotifications() {
       fetch('/api/notifications')
         .then(response => {
@@ -417,10 +339,10 @@
         .catch(error => console.error('Error loading notifications:', error));
     }
   
-    // Cargar notificaciones al cargar la página y repetir cada 5 segundos
+    // Cargar notificaciones solo una vez al cargar la página
     document.addEventListener('DOMContentLoaded', () => {
-      loadNotifications(); // Carga inicial
-      setInterval(loadNotifications, 5000); // Repetir cada 5 segundos
+      loadNotifications(); // Carga única inicial
+      
     });
   </script>
   

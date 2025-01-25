@@ -361,14 +361,19 @@ def get_user_id_by_email(email):
     else:
         return None
 
+# Rutas de API para notificaciones
 @app.route('/api/notifications', methods=['GET'])
 def api_notifications():
+    """
+    Obtiene las notificaciones del usuario actual.
+    Se ejecuta una sola vez cuando se carga la página o cuando el usuario interactúa con el botón de notificaciones.
+    """
     if 'email' not in session:
         return jsonify({'error': 'Usuario no autenticado'}), 401
 
     email = session['email']
     cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM `notifications` WHERE email = %s", [email])
+    cur.execute("SELECT * FROM `notifications` WHERE email = %s ORDER BY id DESC", [email])
     notifications = cur.fetchall()
     cur.close()
 
@@ -377,6 +382,10 @@ def api_notifications():
 
 @app.route('/api/update-notifications', methods=['POST'])
 def update_notifications():
+    """
+    Actualiza el estado de las notificaciones a 'Inactiva'.
+    Se ejecuta solo cuando el usuario hace clic en el botón de notificaciones.
+    """
     if 'email' not in session:
         return jsonify({'error': 'Usuario no autenticado'}), 401
 
@@ -384,7 +393,7 @@ def update_notifications():
     try:
         conn = mysql.connection
         cur = conn.cursor()
-        cur.execute("UPDATE notifications SET status = 'Inactiva' WHERE email = %s", [email])
+        cur.execute("UPDATE notifications SET status = 'Inactiva' WHERE email = %s AND status = 'Activa'", [email])
         conn.commit()
         cur.close()
         return jsonify({'message': 'Notificaciones actualizadas correctamente'}), 200

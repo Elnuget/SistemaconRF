@@ -303,7 +303,7 @@
 
         // Función para actualizar el título de la página
         function updateTitle(pageName) {
-            document.title = pageName + ' | Task Manager';  // Actualiza el título del documento con el nombre de la página
+            document.title = pageName;  // Actualiza el título del documento con el nombre de la página
         }
     </script>
 
@@ -429,10 +429,9 @@
                 .catch(error => console.error('Error loading notifications:', error));
         }
 
-        // Cargar notificaciones al cargar la página y repetir cada 5 segundos
+        // Cargar notificaciones solo una vez al cargar la página
         document.addEventListener('DOMContentLoaded', () => {
-            loadNotifications(); // Carga inicial
-            setInterval(loadNotifications, 5000); // Repetir cada 5 segundos
+            loadNotifications(); // Carga única inicial
         });
     </script>
 
@@ -469,61 +468,7 @@
     <!-- fullCalendar 2.2.5 -->
     <script src="{{ url_for('static', filename='plugins/moment/moment.min.js') }}"></script>
     <script src="{{ url_for('static', filename='plugins/fullcalendar/main.js') }}"></script>
-    <script>
-        $(document).ready(function () {
-            var calendarEl = document.getElementById('calendar');
-
-            $.ajax({
-                url: '/api/tasks',
-                method: 'GET',
-                success: function (data) {
-                    // Ordenar las tareas para que la última tarea se cargue primero
-                    data.sort(function (a, b) {
-                        return new Date(b.start) - new Date(a.start);
-                    });
-
-                    var calendar = new FullCalendar.Calendar(calendarEl, {
-                        headerToolbar: {
-                            left: 'prev,next today',
-                            center: 'title',
-                            right: 'dayGridMonth,timeGridWeek,timeGridDay'
-                        },
-                        themeSystem: 'bootstrap',
-                        events: data,
-                        editable: true,
-                        droppable: true,
-                        eventClick: function (info) {
-                            // Obtener los datos del evento
-                            var taskId = info.event.id;
-                            var taskTitle = info.event.title;
-                            var taskDescription = info.event.extendedProps.description;
-                            var taskStartDate = info.event.start.toISOString().slice(0, 16);
-                            var taskEndDate = info.event.end ? info.event.end.toISOString().slice(0, 16) : '';
-
-                            // Llenar el formulario de edición con los datos del evento
-                            loadTaskData(taskId, taskTitle, taskDescription, taskStartDate, taskEndDate);
-
-                            // Mostrar el modal de edición
-                            $('#editTaskModal').modal('show');
-                        }
-                    });
-
-                    calendar.render();
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.log('Error: ' + textStatus + ' - ' + errorThrown);
-                }
-            });
-        });
-
-        function loadTaskData(id, title, description, date_task, date_end) {
-            document.getElementById('editTaskId').value = id;
-            document.getElementById('editTitle').value = title;
-            document.getElementById('editDescription').value = description;
-            document.getElementById('editStartDate').value = date_task.replace(' ', 'T');
-            document.getElementById('editEndDate').value = date_end.replace(' ', 'T');
-        }
-    </script>
+   
 
     <!-- jQuery -->
     <script src="../../plugins/jquery/jquery.min.js"></script>
