@@ -14,6 +14,7 @@ import base64
 from PIL import Image
 import io
 import face_recognition
+from functools import wraps
 
 # Inicializar la aplicación Flask
 app = Flask(__name__)
@@ -601,6 +602,103 @@ def simple_detect_face():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'is_admin' not in session or not session['is_admin']:
+            flash('Acceso denegado. Se requieren privilegios de administrador.', 'danger')
+            return redirect(url_for('home'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+@app.route('/users')
+@admin_required
+def users():
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM users")
+    users = cur.fetchall()
+    cur.close()
+    return render_template('users.html', users=users)
+
+@app.route('/api/users', methods=['POST'])
+@admin_required
+def create_user():
+    data = request.json
+    try:
+        cur = mysql.connection.cursor()
+        
+        # Verificar si el email ya existe
+        cur.execute("SELECT * FROM users WHERE email = %s", [data['email']])
+        if cur.fetchone():
+            return jsonify({'success': False, 'message': 'El email ya está registrado'})
+        
+        hashed_password = generate_password_hash(data['password'])
+        cur.execute("""
+            INSERT INTO users (name, surnames, email, password, verified, is_admin)
+            VALUES (%s, %s, %s, %s, TRUE, %s)
+        """, (data['name'], data['surnames'], data['email'], hashed_password, data['is_admin']))
+        
+        mysql.connection.commit()
+        cur.close()
+        return jsonify({'success': True, 'message': 'Usuario creado exitosamente'})
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)})
+
+@app.route('/api/users/<int:user_id>', methods=['GET', 'PUT', 'DELETE'])
+@admin_required
+def manage_user(user_id):
+    cur = mysql.connection.cursor()
+    
+    if request.method == 'GET':
+        cur.execute("SELECT * FROM users WHERE id = %s", [user_id])
+        user = cur.fetchone()
+        cur.close()
+        if user:
+            return jsonify({
+                'id': user[0],
+                'name': user[1],
+                'surnames': user[2],
+                'email': user[3],
+                'is_admin': user[9]
+            })
+        return jsonify({'error': 'Usuario no encontrado'}), 404
+
+    elif request.method == 'PUT':
+        data = request.json
+        try:
+            if data['password']:
+                hashed_password = generate_password_hash(data['password'])
+                cur.execute("""
+                    UPDATE users 
+                    SET name = %s, surnames = %s, email = %s, password = %s, is_admin = %s
+                    WHERE id = %s
+                """, (data['name'], data['surnames'], data['email'], hashed_password, data['is_admin'], user_id))
+            else:
+                cur.execute("""
+                    UPDATE users 
+                    SET name = %s, surnames = %s, email = %s, is_admin = %s
+                    WHERE id = %s
+                """, (data['name'], data['surnames'], data['email'], data['is_admin'], user_id))
+            
+            mysql.connection.commit()
+            cur.close()
+            return jsonify({'success': True, 'message': 'Usuario actualizado exitosamente'})
+        except Exception as e:
+            return jsonify({'success': False, 'message': str(e)})
+
+    elif request.method == 'DELETE':
+        try:
+            # No permitir eliminar al usuario actual
+            if user_id == session.get('user_id'):
+                return jsonify({'success': False, 'message': 'No puedes eliminar tu propio usuario'})
+            
+            cur.execute("DELETE FROM users WHERE id = %s", [user_id])
+            mysql.connection.commit()
+            cur.close()
+            return jsonify({'success': True, 'message': 'Usuario eliminado exitosamente'})
+        except Exception as e:
+            return jsonify({'success': False, 'message': str(e)})
 
 if __name__ == '__main__':
     app.run(debug=True)

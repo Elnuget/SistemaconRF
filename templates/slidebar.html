@@ -190,6 +190,14 @@
                                 <p>Inicio</p>
                             </a>
                         </li>
+                        {% if session['is_admin'] == 1 %}
+                        <li class="nav-item">
+                            <a href="{{ url_for('users') }}" class="nav-link">
+                                <i class="nav-icon fas fa-users"></i>
+                                <p>Gestión de Usuarios</p>
+                            </a>
+                        </li>
+                        {% endif %}
                         <li class="nav-item">
                             <a href="#" class="nav-link" data-toggle="modal" data-target="#uploadProfileImageModal">
                                 <i class="nav-icon fas fa-user"></i>
