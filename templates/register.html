@@ -115,7 +115,7 @@
     async function startFaceDetection() {
       while (video.srcObject) {
         try {
-          const response = await fetch('/detect-face', {
+          const response = await fetch('/simple-detect-face', {
             method: 'POST',
             body: JSON.stringify({
               image: getVideoFrame()
@@ -132,7 +132,7 @@
           faceStatus.style.backgroundColor = faceDetected ? 'rgba(0,255,0,0.5)' : 'rgba(255,0,0,0.5)';
           takePhotoButton.disabled = !faceDetected;
           
-          await new Promise(resolve => setTimeout(resolve, 100));
+          await new Promise(resolve => setTimeout(resolve, 300));
         } catch (error) {
           console.error('Error en la detección facial:', error);
         }
@@ -177,6 +177,11 @@
         takePhotoButton.style.display = 'block';
         retakePhotoButton.style.display = 'none';
         profilePhotoInput.value = '';
+        faceStatus.textContent = 'No se detecta rostro';
+        faceStatus.style.backgroundColor = 'rgba(255,0,0,0.5)';
+        
+        // Vuelve a iniciar el bucle de detección
+        startFaceDetection();
       } catch (err) {
         console.error('Error al acceder a la cámara:', err);
         alert('Error al acceder a la cámara');

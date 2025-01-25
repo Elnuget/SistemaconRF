@@ -13,6 +13,7 @@ import numpy as np
 import base64
 from PIL import Image
 import io
+import face_recognition
 
 # Inicializar la aplicación Flask
 app = Flask(__name__)
@@ -118,12 +119,12 @@ def register():
             with open(os.path.join(app.config['UPLOAD_FOLDER'], filename), 'wb') as f:
                 f.write(base64.b64decode(imgstr))
 
-        # Si el correo no está registrado, proceder con el registro
-        verification_code = randint(100000, 999999)  # Generar un código de verificación de 6 dígitos
-        verification_sent_time = datetime.now()  # Obtener el tiempo actual
+        # Generar código de verificación
+        verification_code = randint(100000, 999999)
+        verification_sent_time = datetime.now()
         sql = """INSERT INTO users 
                 (name, surnames, email, password, verification_code, verified, 
-                verification_sent_time, profile_image) 
+                 verification_sent_time, profile_image) 
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"""
         data = (name, surnames, email, hashed_password, verification_code, 
                 False, verification_sent_time, filename)
@@ -136,8 +137,8 @@ def register():
         body = f"Hola {name},\n\nTu código de verificación es: {verification_code}"
         send_email(subject, body, email)
 
-        session['email'] = email  # Guardar email en la sesión para usar en la verificación
-        session['name'] = name  # Guardar el nombre en la sesión
+        session['email'] = email
+        session['name'] = name
 
         flash('Usuario registrado correctamente. Por favor, verifica tu correo electrónico.', 'success')
         return redirect(url_for('verify_email'))
@@ -174,13 +175,12 @@ def verify_email():
                     mysql.connection.commit()
                     cur.close()
 
-                    # Guardar el nombre del usuario en la sesión si no está ya
                     if 'name' not in session:
                         session['name'] = name
 
                     # Enviar correo de bienvenida
                     subject = "Bienvenido a Task Manager"
-                    body = f"Hola {session['name']},\n\nTu cuenta ha sido verificada exitosamente. ¡Bienvenido a Task Manager! Disfruta de la aplicación."
+                    body = f"Hola {session['name']},\n\nTu cuenta ha sido verificada exitosamente."
                     send_email(subject, body, email)
 
                     flash('Correo verificado correctamente', 'success')
@@ -203,13 +203,13 @@ def resend_verification():
         user = cur.fetchone()
         if user:
             name = user[0]
-            verification_code = randint(100000, 999999) # Generar un nuevo código de verificación
+            verification_code = randint(100000, 999999)
             verification_sent_time = datetime.now()
-            cur.execute("UPDATE users SET verification_code = %s, verification_sent_time = %s WHERE email = %s", (verification_code, verification_sent_time, email))
+            cur.execute("UPDATE users SET verification_code = %s, verification_sent_time = %s WHERE email = %s",
+                        (verification_code, verification_sent_time, email))
             mysql.connection.commit()
             cur.close()
 
-            # Enviar el nuevo código de verificación por correo
             subject = "Nuevo Código de Verificación"
             body = f"Hola {name},\n\nTu nuevo código de verificación es: {verification_code}"
             send_email(subject, body, email)
@@ -229,7 +229,7 @@ def is_verified_user(email):
     cur.execute("SELECT verified FROM users WHERE email = %s", [email])
     user = cur.fetchone()
     cur.close()
-    return user and user[0]  # Retorna True si el usuario está verificado, de lo contrario False
+    return user and user[0]
 
 # Configuración de Flask-Mail
 app.config['MAIL_SERVER'] = 'sandbox.smtp.mailtrap.io'
@@ -246,16 +246,15 @@ def send_email(subject, body, to_email):
         msg = Message(
             subject=subject,
             sender=app.config['MAIL_USERNAME'],
-            recipients=[to_email],  # Lista de destinatarios
+            recipients=[to_email],
             body=body
         )
         with app.app_context():
-            mail.send(msg)  # Enviar el correo
+            mail.send(msg)
         print("Correo enviado exitosamente")
     except Exception as e:
         print(f"Error al enviar el correo: {e}")
 
-# Manejo de imágenes de perfil
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
 MAX_FILE_SIZE_MB = 2
 
@@ -264,160 +263,307 @@ def allowed_file(filename):
 
 @app.route('/upload-profile-image', methods=['POST'])
 def upload_profile_image():
-    if 'email' not in session:  # Verifica si el usuario no ha iniciado sesión
-        return jsonify({'error': 'Debes iniciar sesión primero'}), 401  # Retorna un error JSON
+    if 'email' not in session:
+        return jsonify({'error': 'Debes iniciar sesión primero'}), 401
 
-    if 'file' not in request.files:  # Verifica si no se ha subido ningún archivo
-        return jsonify({'error': 'No se ha seleccionado ningún archivo'}), 400  # Retorna un error JSON
+    if 'file' not in request.files:
+        return jsonify({'error': 'No se ha seleccionado ningún archivo'}), 400
 
-    file = request.files['file']  # Obtiene el archivo subido
+    file = request.files['file']
 
-    if file.filename == '':  # Verifica si el nombre del archivo está vacío
-        return jsonify({'error': 'No se ha seleccionado ningún archivo'}), 400  # Retorna un error JSON
+    if file.filename == '':
+        return jsonify({'error': 'No se ha seleccionado ningún archivo'}), 400
     
-    if not allowed_file(file.filename):  # Verifica si el archivo tiene una extensión permitida
-        return jsonify({'error': 'Formato de archivo no permitido. Solo se permiten imágenes en formato PNG, JPG, JPEG, GIF o WEBP'}), 400  # Retorna un error JSON
+    if not allowed_file(file.filename):
+        return jsonify({'error': 'Formato de archivo no permitido.'}), 400
     
-    # Verificar el tamaño del archivo
     if 'file' in request.files:
-        file_size_mb = request.cookies.get('file_size_mb')  # Obtiene el tamaño del archivo desde las cookies
-        if file_size_mb and float(file_size_mb) > MAX_FILE_SIZE_MB:  # Verifica si el tamaño del archivo excede el máximo permitido
-            return jsonify({'error': f'El tamaño máximo permitido del archivo es de {MAX_FILE_SIZE_MB} MB'}), 400  # Retorna un error JSON
+        file_size_mb = request.cookies.get('file_size_mb')
+        if file_size_mb and float(file_size_mb) > MAX_FILE_SIZE_MB:
+            return jsonify({'error': f'El tamaño máximo permitido es {MAX_FILE_SIZE_MB} MB'}), 400
     
-    if request.method == 'POST':  # Verifica si la solicitud es POST
-        file = request.files['file']  # Obtiene el archivo subido nuevamente
-        cur = mysql.connection.cursor()  # Crea un cursor para ejecutar comandos SQL
-        cur.execute("SELECT profile_image FROM users WHERE email = %s", (session['email'],))  # Consulta para obtener la imagen de perfil anterior del usuario
-        previous_profile_image = cur.fetchone()  # Obtiene el resultado de la consulta
-        cur.close()  # Cierra el cursor
+    if request.method == 'POST':
+        file = request.files['file']
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT profile_image FROM users WHERE email = %s", (session['email'],))
+        previous_profile_image = cur.fetchone()
+        cur.close()
 
-        if previous_profile_image:  # Verifica si hay una imagen de perfil anterior
-            previous_filename = previous_profile_image[0]  # Obtiene el nombre del archivo de la imagen de perfil anterior
-            if previous_filename:  # Verifica si el nombre del archivo anterior no es None
+        if previous_profile_image:
+            previous_filename = previous_profile_image[0]
+            if previous_filename:
                 try:
-                    os.remove(os.path.join(app.config['UPLOAD_FOLDER'], previous_filename))  # Intenta eliminar la imagen de perfil anterior del sistema de archivos
-                except FileNotFoundError:  # Maneja el caso en que el archivo no se encuentre
+                    os.remove(os.path.join(app.config['UPLOAD_FOLDER'], previous_filename))
+                except FileNotFoundError:
                     pass
 
-        # Generar un nombre aleatorio único para el nuevo archivo
-        filename = str(uuid.uuid4()) + secure_filename(file.filename)  # Genera un nombre único para el archivo
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))  # Guarda el archivo en el directorio de subida
+        filename = str(uuid.uuid4()) + secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-        cur = mysql.connection.cursor()  # Crea un cursor para ejecutar comandos SQL
-        cur.execute("UPDATE users SET profile_image = %s WHERE email = %s", (filename, session['email']))  # Actualiza la imagen de perfil del usuario en la base de datos
-        mysql.connection.commit()  # Confirma los cambios en la base de datos
-        cur.close()  # Cierra el cursor
+        cur = mysql.connection.cursor()
+        cur.execute("UPDATE users SET profile_image = %s WHERE email = %s", (filename, session['email']))
+        mysql.connection.commit()
+        cur.close()
 
-        return jsonify({'message': 'Imagen de perfil actualizada correctamente'}), 200  # Retorna un mensaje de éxito como JSON
+        return jsonify({'message': 'Imagen de perfil actualizada correctamente'}), 200
     else:
-        return jsonify({'error': 'Método no permitido'}), 405  # Retorna un error JSON indicando que el método no está permitido
+        return jsonify({'error': 'Método no permitido'}), 405
 
 @app.route('/uploaded-profile-image/<filename>')
 def uploaded_profile_image(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)  # Envía el archivo desde el directorio de subida
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 @app.route('/get-profile-image-url-master')
 def get_profile_image_url_master():
     try:
-        email = session.get('email')  # Obtiene el correo electrónico de la sesión
+        email = session.get('email')
         if email:
-            user_id = get_user_id_by_email(email)  # Obtiene el ID del usuario
+            user_id = get_user_id_by_email(email)
             if user_id:
-                cur = mysql.connection.cursor()  # Crea un cursor para ejecutar comandos SQL
-                cur.execute("SELECT profile_image FROM users WHERE id = %s", (user_id,))  # Consulta para obtener la imagen de perfil del usuario
-                profile_image = cur.fetchone()  # Obtiene el resultado de la consulta
-                cur.close()  # Cierra el cursor
-                profile_image_name = profile_image[0]  # Obtiene el nombre del archivo de la imagen de perfil
+                cur = mysql.connection.cursor()
+                cur.execute("SELECT profile_image FROM users WHERE id = %s", (user_id,))
+                profile_image = cur.fetchone()
+                cur.close()
+                profile_image_name = profile_image[0]
                 if profile_image_name is None or not os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], profile_image_name)):
-                    # Si no hay imagen de perfil o no existe el archivo, usa una imagen por defecto
                     profile_image_name = "perfil-por-defecto.png"
                     profile_image_url = f"/uploaded-profile-image/{profile_image_name}"
-                    return jsonify({'profile_image_url': profile_image_url})  # Retorna la URL de la imagen por defecto
+                    return jsonify({'profile_image_url': profile_image_url})
                 else:
                     profile_image_url = f"/uploaded-profile-image/{profile_image_name}"
-                    return jsonify({'profile_image_url': profile_image_url})  # Retorna la URL de la imagen de perfil del usuario
-            return jsonify({'profile_image_url': '/static/Profile_image/default_profile.jpg'})  # Retorna la URL de una imagen por defecto si no se encuentra el usuario
+                    return jsonify({'profile_image_url': profile_image_url})
+            return jsonify({'profile_image_url': '/static/Profile_image/default_profile.jpg'})
         else:
-            return jsonify({'error': 'Correo electrónico no encontrado en la sesión'})  # Retorna un error JSON si no hay correo electrónico en la sesión
+            return jsonify({'error': 'Correo electrónico no encontrado en la sesión'})
     except Exception as e:
-        return jsonify({'error': str(e)})  # Retorna un error JSON en caso de excepción
+        return jsonify({'error': str(e)})
 
 def get_user_id_by_email(email):
-    cur = mysql.connection.cursor()  # Crea un cursor para ejecutar comandos SQL
-    cur.execute("SELECT id FROM users WHERE email = %s", (email,))  # Consulta para obtener el ID del usuario
-    user_id = cur.fetchone()  # Obtiene el resultado de la consulta
-    cur.close()  # Cierra el cursor
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT id FROM users WHERE email = %s", (email,))
+    user_id = cur.fetchone()
+    cur.close()
     if user_id:
-        return user_id[0]  # Retorna el ID del usuario
+        return user_id[0]
     else:
-        return None  # Retorna None si no se encuentra el usuario
+        return None
 
-# Notificaciones
 @app.route('/api/notifications', methods=['GET'])
 def api_notifications():
-    if 'email' not in session:  # Verifica si el usuario no ha iniciado sesión
-        return jsonify({'error': 'Usuario no autenticado'}), 401  # Retorna un error JSON
+    if 'email' not in session:
+        return jsonify({'error': 'Usuario no autenticado'}), 401
 
-    email = session['email']  # Obtiene el correo electrónico del usuario desde la sesión
-    cur = mysql.connection.cursor()  # Crea un cursor para ejecutar comandos SQL
-    cur.execute("SELECT * FROM `notifications` WHERE email = %s", [email])  # Consulta para obtener las notificaciones del usuario
-    notifications = cur.fetchall()  # Obtiene todos los resultados de la consulta
-    cur.close()  # Cierra el cursor
+    email = session['email']
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM `notifications` WHERE email = %s", [email])
+    notifications = cur.fetchall()
+    cur.close()
 
-    notifications_list = [{'id': n[0], 'notification': n[2], 'status': n[3]} for n in notifications]  # Procesa los resultados en una lista de diccionarios
-    return jsonify(notifications_list)  # Retorna las notificaciones como JSON
+    notifications_list = [{'id': n[0], 'notification': n[2], 'status': n[3]} for n in notifications]
+    return jsonify(notifications_list)
 
 @app.route('/api/update-notifications', methods=['POST'])
 def update_notifications():
-    if 'email' not in session:  # Verifica si el usuario no ha iniciado sesión
-        return jsonify({'error': 'Usuario no autenticado'}), 401  # Retorna un error JSON
+    if 'email' not in session:
+        return jsonify({'error': 'Usuario no autenticado'}), 401
 
-    email = session['email']  # Obtiene el correo electrónico del usuario desde la sesión
+    email = session['email']
     try:
-        conn = mysql.connection  # Obtiene la conexión a la base de datos
-        cur = conn.cursor()  # Crea un cursor para ejecutar comandos SQL
-        cur.execute("UPDATE notifications SET status = 'Inactiva' WHERE email = %s", [email])  # Consulta para actualizar el estado de las notificaciones
-        conn.commit()  # Confirma los cambios en la base de datos
-        cur.close()  # Cierra el cursor
-        return jsonify({'message': 'Notificaciones actualizadas correctamente'}), 200  # Retorna un mensaje de éxito como JSON
-    except Exception as e:  # Maneja cualquier excepción que ocurra
-        return jsonify({'error': str(e)}), 500  # Retorna un error JSON
+        conn = mysql.connection
+        cur = conn.cursor()
+        cur.execute("UPDATE notifications SET status = 'Inactiva' WHERE email = %s", [email])
+        conn.commit()
+        cur.close()
+        return jsonify({'message': 'Notificaciones actualizadas correctamente'}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
+#######################################################
+# 1) Enviar también el 'id' de cada usuario con su imagen
+#######################################################
+@app.route('/get-user-images', methods=['GET'])
+def get_user_images():
+    """
+    Retorna una lista de diccionarios con {id, image} donde:
+      - id: el ID del usuario en la BD
+      - image: la imagen en base64
+    """
+    try:
+        cur = mysql.connection.cursor()
+        # Traemos id y filename de quienes tengan una imagen
+        cur.execute("SELECT id, profile_image FROM users WHERE profile_image IS NOT NULL")
+        rows = cur.fetchall()
+        cur.close()
+
+        user_images = []
+        for row in rows:
+            user_id = row[0]
+            profile_image_name = row[1]
+            profile_image_path = os.path.join(app.config['UPLOAD_FOLDER'], profile_image_name)
+
+            # Verificamos que el archivo exista
+            if os.path.exists(profile_image_path):
+                with open(profile_image_path, "rb") as image_file:
+                    encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
+                    user_images.append({
+                        'id': user_id,
+                        'image': encoded_string
+                    })
+
+        return jsonify(user_images)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+#######################################################
+# 2) Detectar cara y devolver "closest match" usando face_recognition
+#######################################################
 @app.route('/detect-face', methods=['POST'])
 def detect_face():
     try:
-        # Obtener la imagen desde la solicitud
         data = request.json['image']
-        # Convertir base64 a imagen
+        user_images = request.json['user_images']
+
+        # 2.1) Decodificar la imagen capturada de la webcam
         image_data = data.split(',')[1]
         image_bytes = base64.b64decode(image_data)
-        image = Image.open(io.BytesIO(image_bytes))
+        pil_image = Image.open(io.BytesIO(image_bytes))
         
-        # Convertir a formato OpenCV
-        opencv_image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+        # Convertir a formato numpy (RGB)
+        rgb_image = np.array(pil_image.convert('RGB'))
+
+        # 2.2) Usar face_recognition para detectar si hay rostros
+        face_locations = face_recognition.face_locations(rgb_image)
+        if len(face_locations) == 0:
+            return jsonify({'face_detected': False})
+
+        # Tomamos el primer rostro
+        detected_face_encoding = face_recognition.face_encodings(rgb_image, face_locations)[0]
+
+        # 2.3) Comparar con todas las imágenes de usuarios
+        closest_match = None
+        closest_distance = float('inf')
+
+        for user_img in user_images:
+            user_id = user_img['id']
+            encoded_user_image = user_img['image']
+
+            # Decodificar la imagen del usuario
+            user_image_bytes = base64.b64decode(encoded_user_image)
+            user_image_np = np.array(Image.open(io.BytesIO(user_image_bytes)).convert('RGB'))
+
+            # Si no se detectan rostros en la imagen del usuario, continuamos
+            encodings = face_recognition.face_encodings(user_image_np)
+            if not encodings:
+                continue
+
+            # Obtenemos el primer encoding
+            user_face_encoding = encodings[0]
+            distance = face_recognition.face_distance([user_face_encoding], detected_face_encoding)[0]
+
+            if distance < closest_distance:
+                closest_distance = distance
+                closest_match = {
+                    'id': user_id,
+                    'image': encoded_user_image
+                }
+
+        # 2.4) Si encontramos al menos un "closest match", lo devolvemos
+        if closest_match:
+            return jsonify({
+                'face_detected': True,
+                'closest_match': f"data:image/jpeg;base64,{closest_match['image']}"
+            })
+        else:
+            return jsonify({'face_detected': True, 'closest_match': None})
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+#######################################################
+# 3) Login con rostro
+#######################################################
+@app.route('/login-face', methods=['POST'])
+def login_face():
+    try:
+        data = request.json['image']
+        user_images = request.json['user_images']
+
+        # Decodificar la imagen de la webcam
+        image_data = data.split(',')[1]
+        image_bytes = base64.b64decode(image_data)
+        pil_image = Image.open(io.BytesIO(image_bytes))
+        rgb_image = np.array(pil_image.convert('RGB'))
+
+        # Detección de rostros
+        face_locations = face_recognition.face_locations(rgb_image)
+        if len(face_locations) == 0:
+            return jsonify({'success': False, 'message': 'No se detecta rostro'})
+
+        # Tomamos solo el primer rostro
+        detected_face_encoding = face_recognition.face_encodings(rgb_image, face_locations)[0]
+
+        # Comparamos con las imágenes de la BD
+        for user_img in user_images:
+            user_id = user_img['id']
+            encoded_user_image = user_img['image']
+
+            # Decodificar la imagen del usuario
+            user_image_bytes = base64.b64decode(encoded_user_image)
+            user_image_np = np.array(Image.open(io.BytesIO(user_image_bytes)).convert('RGB'))
+
+            user_face_encodings = face_recognition.face_encodings(user_image_np)
+            if not user_face_encodings:
+                continue
+
+            user_face_encoding = user_face_encodings[0]
+            matches = face_recognition.compare_faces([user_face_encoding], detected_face_encoding)
+
+            if matches[0]:
+                # Coincidencia encontrada, iniciamos sesión
+                cur = mysql.connection.cursor()
+                cur.execute("SELECT * FROM users WHERE id = %s", (user_id,))
+                user = cur.fetchone()
+                cur.close()
+
+                if user:
+                    # user = (id, name, surnames, email, password, ..., verified, profile_image, etc.)
+                    session['email'] = user[3]
+                    session['name'] = user[1]
+                    session['surnames'] = user[2]
+                    return jsonify({'success': True})
+                else:
+                    return jsonify({'success': False, 'message': 'Usuario no encontrado'})
+
+        return jsonify({'success': False, 'message': 'No se encontró una coincidencia'})
+
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)})
         
-        # Modifica esta línea para usar la ruta absoluta
-        cascade_path = os.path.join(os.path.dirname(__file__), 
-                                  'static/haarcascade/haarcascade_frontalface_default.xml')
-        face_cascade = cv2.CascadeClassifier(cascade_path)
-        
-        if face_cascade.empty():
-            raise Exception("Error al cargar el clasificador Haar Cascade")
-            
-        # Convertir a escala de grises
-        gray = cv2.cvtColor(opencv_image, cv2.COLOR_BGR2GRAY)
-        
-        # Detectar rostros
-        faces = face_cascade.detectMultiScale(
-            gray,
-            scaleFactor=1.1,
-            minNeighbors=5,
-            minSize=(30, 30)
-        )
-        
-        # Retornar si se detectó un rostro
-        return jsonify({'face_detected': len(faces) > 0})
-    
+@app.route('/simple-detect-face', methods=['POST'])
+def simple_detect_face():
+    """
+    Endpoint que solo se encarga de verificar si la imagen tiene un rostro,
+    sin compararlo con usuarios en la base de datos.
+    """
+    try:
+        # Obtener el JSON que envías desde JS
+        data = request.json.get('image')
+        if not data:
+            return jsonify({'error': 'No image data sent'}), 400
+
+        # Decodificar la imagen base64 (viene con el prefijo 'data:image/...') y convertir a RGB
+        image_data = data.split(',')[1]
+        image_bytes = base64.b64decode(image_data)
+        pil_image = Image.open(io.BytesIO(image_bytes)).convert('RGB')
+        rgb_image = np.array(pil_image)
+
+        # Detectar si hay al menos un rostro
+        face_locations = face_recognition.face_locations(rgb_image)
+        if len(face_locations) == 0:
+            return jsonify({'face_detected': False})
+        else:
+            return jsonify({'face_detected': True})
+
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
