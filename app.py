@@ -64,6 +64,19 @@ def login():
         session['email'] = email
         session['name'] = user[1]
         session['surnames'] = user[2]
+        session['is_admin'] = user[9]
+        # Agregar notificación
+        cur = mysql.connection.cursor()
+        cur.execute(
+            "INSERT INTO notifications (email, notification, status) VALUES (%s, %s, 'Activa')",
+            (email, f"Nuevo inicio de sesión - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        )
+        mysql.connection.commit()
+        cur.close()
+        ip_address = request.remote_addr
+        subject = "Notificación de inicio de sesión"
+        body = f"Se ha iniciado sesión el {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} desde la IP {ip_address}."
+        send_email(subject, body, email)
         return redirect(url_for('home'))
     else:
         flash('Las credenciales no son correctas', 'danger')
@@ -317,9 +330,9 @@ def uploaded_profile_image(filename):
 def get_profile_image_url_master():
     try:
         email = session.get('email')
-        if email:
+        if (email):
             user_id = get_user_id_by_email(email)
-            if user_id:
+            if (user_id):
                 cur = mysql.connection.cursor()
                 cur.execute("SELECT profile_image FROM users WHERE id = %s", (user_id,))
                 profile_image = cur.fetchone()
@@ -402,7 +415,7 @@ def get_user_images():
             profile_image_path = os.path.join(app.config['UPLOAD_FOLDER'], profile_image_name)
 
             # Verificamos que el archivo exista
-            if os.path.exists(profile_image_path):
+            if (os.path.exists(profile_image_path)):
                 with open(profile_image_path, "rb") as image_file:
                     encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
                     user_images.append({
@@ -530,6 +543,19 @@ def login_face():
                     session['email'] = user[3]
                     session['name'] = user[1]
                     session['surnames'] = user[2]
+                    session['is_admin'] = user[9]
+                    # Agregar notificación
+                    cur = mysql.connection.cursor()
+                    cur.execute(
+                        "INSERT INTO notifications (email, notification, status) VALUES (%s, %s, 'Activa')",
+                        (user[3], f"Nuevo inicio de sesión (rostro) - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+                    )
+                    mysql.connection.commit()
+                    cur.close()
+                    ip_address = request.remote_addr
+                    subject = "Notificación de inicio de sesión (Rostro)"
+                    body = f"Se ha iniciado sesión el {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} desde la IP {ip_address}."
+                    send_email(subject, body, user[3])
                     return jsonify({'success': True})
                 else:
                     return jsonify({'success': False, 'message': 'Usuario no encontrado'})

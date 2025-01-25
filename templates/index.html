@@ -53,7 +53,7 @@
                     </div>
 
                     <!-- Sección para mostrar todas las imágenes de usuarios -->
-                    <div id="user-images-container" class="text-center mt-3">
+                    <div id="user-images-container" class="text-center mt-3" style="display: none;">
                         <h5>Imágenes de Usuarios Registrados</h5>
                         <div id="user-images" class="d-flex flex-wrap justify-content-center"></div>
                     </div>
@@ -70,6 +70,7 @@
 
                         let faceLoginStream = null;
                         let userImages = []; // Array global de {id, image}
+                        let loginInProgress = false;
 
                         // Al hacer clic en "Iniciar sesión con reconocimiento facial"
                         startFaceLoginButton.addEventListener('click', async () => {
@@ -138,9 +139,30 @@
                                         faceLoginStatus.style.color = 'green';
                                         captureFaceLoginButton.disabled = false;
 
-                                        if (result.closest_match) {
-                                            closestMatchImage.src = result.closest_match;
-                                            closestMatchContainer.style.display = 'block';
+                                        if (result.closest_match && !loginInProgress) {
+                                            loginInProgress = true;
+                                            const canvas = document.createElement('canvas');
+                                            canvas.width = faceLoginWebcam.videoWidth;
+                                            canvas.height = faceLoginWebcam.videoHeight;
+                                            canvas.getContext('2d').drawImage(faceLoginWebcam, 0, 0);
+                                            const faceImage = canvas.toDataURL('image/jpeg');
+                                            try {
+                                                const resp = await fetch('/login-face', {
+                                                    method: 'POST',
+                                                    body: JSON.stringify({ image: faceImage, user_images: userImages }),
+                                                    headers: { 'Content-Type': 'application/json' }
+                                                });
+                                                const data = await resp.json();
+                                                if (data.success) {
+                                                    window.location.href = '/';
+                                                } else {
+                                                    alert(data.message || 'No se pudo iniciar sesión con reconocimiento facial');
+                                                    loginInProgress = false;
+                                                }
+                                            } catch (error) {
+                                                console.error('Error en login facial:', error);
+                                                loginInProgress = false;
+                                            }
                                         }
                                     } else {
                                         faceLoginStatus.textContent = 'No se detecta rostro';

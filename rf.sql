@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 25-01-2025 a las 04:16:40
+-- Tiempo de generación: 25-01-2025 a las 05:26:03
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -49,7 +49,8 @@ CREATE TABLE `users` (
   `profile_image` varchar(250) DEFAULT NULL,
   `verification_code` int(11) DEFAULT NULL,
   `verified` tinyint(1) DEFAULT 0,
-  `verification_sent_time` datetime DEFAULT NULL
+  `verification_sent_time` datetime DEFAULT NULL,
+  `is_admin` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
