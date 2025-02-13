@@ -13,7 +13,9 @@ pip install flask-socketio
 pip install Flask Flask-Mail itsdangerous
 pip install Flask-APScheduler  # Corregido: nombre correcto del paquete
 pip install opencv-python
-
+pip install wheel setuptools pip --upgrade 
+pip install git+https://github.com/ageitgey/face_recognition_models --verbose
+instalar setap tools
 Nota: Si encuentra advertencias sobre face_recognition_models, puede ignorarlas 
 ya que son mensajes de deprecación que no afectan la funcionalidad.
 
