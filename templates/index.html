@@ -7,6 +7,46 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
+    <!-- Modal de Aviso de Privacidad -->
+    <div class="modal fade" id="privacyModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="privacyModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="privacyModalLabel">Aviso de Privacidad y Consentimiento para Reconocimiento Facial</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Responsable del tratamiento:</strong> Carlos Angulo.</p>
+                    
+                    <p><strong>Contacto:</strong> Quito, Ecuador 0983468115.</p>
+                    
+                    <p><strong>Finalidad del tratamiento:</strong> Utilizaremos tus datos biométricos de reconocimiento facial para verificar tu identidad y brindarte acceso seguro a nuestros servicios.</p>
+                    
+                    <p><strong>Base legal:</strong> Tu consentimiento expreso, de conformidad con la Ley Orgánica de Protección de Datos Personales.</p>
+                    
+                    <p><strong>Uso y alcance:</strong></p>
+                    <ul>
+                        <li>Los datos de tu rostro serán capturados y procesados para autenticar tu identidad</li>
+                        <li>Se usarán con el fin de probar la aplicación de reconocimiento facial.</li>
+                        <li>No utilizaremos tus datos para otros fines sin tu autorización expresa.</li>
+                    </ul>
+                    
+                    <p><strong>Tiempo de conservación:</strong> Conservaremos tus datos de reconocimiento facial mientras mantengas tu cuenta activa y solo por el tiempo necesario para cumplir con la finalidad descrita, a menos que la ley exija lo contrario.</p>
+                    
+                    <p><strong>Derechos del titular:</strong> Tienes derecho a acceder, rectificar, suprimir, oponerte o solicitar la portabilidad de tus datos, así como otros derechos establecidos en la Ley Orgánica de Protección de Datos Personales. Para ejercerlos, contáctanos en 0983468115.</p>
+                    
+                    <p><strong>Medidas de seguridad:</strong> Implementamos medidas técnicas y organizativas adecuadas para proteger tus datos y evitar su acceso o uso no autorizado.</p>
+                    
+                    <p><strong>Fecha de la última actualización:</strong> <span id="currentDate"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Rechazar</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Acepto</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <main class="d-flex">
         <div class="container-fluid row m-0 vh-100 justify-content-center align-items-center">
             <div class="card shadow w-50">
@@ -225,5 +265,18 @@
             </div>
         </div>
     </main>
+
+    <script>
+        // Mostrar modal de privacidad automáticamente al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            // Actualizar la fecha actual
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('currentDate').textContent = new Date().toLocaleDateString('es-ES', options);
+            
+            // Mostrar el modal
+            const privacyModal = new bootstrap.Modal(document.getElementById('privacyModal'));
+            privacyModal.show();
+        });
+    </script>
 </body>
 </html>
