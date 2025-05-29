@@ -4,88 +4,277 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Python - Flask - Reconocimiento Facial</title>
+  <title>Sistema de Reconocimiento Facial - Registro</title>
+  
+  <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
     crossorigin="anonymous"></script>
   <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+  
   <style>
-    #camera-container {
-      width: 320px;
-      margin: 0 auto;
-      position: relative;
+    body {
+      font-family: "Lato", Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.8;
+      font-weight: normal;
+      background: #f8f9fd;
+      color: gray;
     }
+
+    .ftco-section {
+      padding: 3em 0;
+    }
+
+    .heading-section {
+      font-size: 28px;
+      color: #000;
+    }
+
+    .wrap {
+      width: 100%;
+      border-radius: 5px;
+      -webkit-box-shadow: 0px 10px 34px -15px rgba(0, 0, 0, 0.24);
+      -moz-box-shadow: 0px 10px 34px -15px rgba(0, 0, 0, 0.24);
+      box-shadow: 0px 10px 34px -15px rgba(0, 0, 0, 0.24);
+    }
+
+    .text-wrap {
+      background: #f75959;
+      background: linear-gradient(135deg, #f75959 0%, #f35587 100%);
+      color: #fff;
+    }
+
+    .text-wrap .text h2 {
+      font-weight: 900;
+      color: #fff;
+    }
+
+    .login-wrap {
+      position: relative;
+      background: #fff;
+    }
+
+    .login-wrap h3 {
+      font-weight: 300;
+    }
+
+    .form-group .label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #000;
+      font-weight: 700;
+    }
+
+    .form-control {
+      height: 48px;
+      background: rgba(0, 0, 0, 0.05);
+      color: #000;
+      font-size: 16px;
+      border-radius: 50px;
+      -webkit-box-shadow: none;
+      box-shadow: none;
+      border: 1px solid transparent;
+      padding-left: 20px;
+      padding-right: 20px;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .form-control:focus, .form-control:active {
+      outline: none !important;
+      -webkit-box-shadow: none;
+      box-shadow: none;
+      background: rgba(0, 0, 0, 0.07);
+      border-color: transparent;
+    }
+
+    .btn {
+      cursor: pointer;
+      -webkit-box-shadow: none !important;
+      box-shadow: none !important;
+      font-size: 15px;
+      padding: 10px 20px;
+      border-radius: 50px;
+    }
+
+    .btn.btn-primary {
+      background: linear-gradient(135deg, #f75959 0%, #f35587 100%);
+      border: 1px solid #f35588;
+      color: #fff;
+    }
+
+    .btn.btn-primary:hover {
+      border: 1px solid #f35588;
+      background: #f35588;
+      color: #fff;
+    }
+
+    .btn.btn-success {
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      border: 1px solid #28a745;
+      color: #fff;
+    }
+
+    .btn.btn-warning {
+      background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+      border: 1px solid #ffc107;
+      color: #fff;
+    }
+
+    #camera-container {
+      width: 100%;
+      margin: 0 auto 20px auto;
+      position: relative;
+      text-align: center;
+    }
+
     #webcam {
       width: 100%;
+      max-width: 320px;
       margin-bottom: 10px;
+      border-radius: 10px;
     }
+
     #canvas {
       display: none;
+      max-width: 320px;
+      border-radius: 10px;
     }
+
     #face-status {
       position: absolute;
       top: 10px;
       left: 10px;
-      padding: 5px;
-      background: rgba(0,0,0,0.5);
+      padding: 5px 10px;
+      background: rgba(0,0,0,0.7);
       color: white;
-      border-radius: 5px;
+      border-radius: 15px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .btn-group {
+      margin-top: 10px;
+    }
+
+    .btn-group .btn {
+      margin: 0 2px;
+      flex: 1;
+    }
+
+    .alert {
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    h1, h2, h3, h4, h5 {
+      line-height: 1.5;
+      font-weight: 400;
+      font-family: "Lato", Arial, sans-serif;
+      color: #000;
     }
   </style>
 </head>
 <body>
-  <main class="d-flex">
-    <div class="container-fluid row m-0 vh-100 justify-content-center align-items-center">
-      <div class="card shadow w-50">
-        <div class="card-body">
-          <!-- Mostrar mensajes flash -->
-          {% with messages = get_flashed_messages(with_categories=true) %}
-          {% if messages %}
-          {% for category, message in messages %}
-          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          </div>
-          {% endfor %}
-          {% endif %}
-          {% endwith %}
-
-          <div id="camera-container" class="text-center mb-4">
-            <video id="webcam" autoplay playsinline></video>
-            <canvas id="canvas"></canvas>
-            <div id="face-status">No se detecta rostro</div>
-            <div class="btn-group w-100" role="group">
-              <button type="button" id="startCamera" class="btn btn-primary">Iniciar Cámara</button>
-              <button type="button" id="takePhoto" class="btn btn-success" disabled>Tomar Foto</button>
-              <button type="button" id="retakePhoto" class="btn btn-warning" style="display: none;">Nueva Foto</button>
+  <section class="ftco-section">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-6 text-center mb-5">
+          <h2 class="heading-section">Sistema de Reconocimiento Facial</h2>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-md-12 col-lg-10">
+          <div class="wrap d-md-flex">
+            
+            <!-- Panel lateral con gradiente -->
+            <div class="text-wrap p-4 p-lg-5 text-center d-flex align-items-center order-md-last">
+              <div class="text w-100">
+                <h2>¡Bienvenido!</h2>
+                <p>Únete a nuestro sistema de reconocimiento facial</p>
+                <p>Registra tu rostro de forma segura</p>
+                <form action="/" method="get" style="margin-top: 20px;">
+                  <button type="submit" class="btn btn-white btn-outline-white">Volver al Inicio</button>
+                </form>
+              </div>
             </div>
-          </div>
 
-          <form action="/register" method="post" enctype="multipart/form-data">
-            <h3 class="text-center">Sistema de Reconocimiento Facial</h3>
-            <h5 class="text-center">Registro de Usuario</h5>
-            <label>Nombre</label>
-            <input type="text" class="form-control mb-3" name="name" required>
-            <label>Apellidos</label>
-            <input type="text" class="form-control mb-3" name="surnames" required>
-            <label>Email</label>
-            <input type="email" class="form-control mb-3" name="email" required>
-            <label>Contraseña</label>
-            <input type="password" class="form-control mb-3" name="password" required>
-            <label>Confirmar Contraseña</label>
-            <input type="password" class="form-control mb-3" name="confirm_password" required>
-            <input type="hidden" name="profile_photo" id="profile_photo">
-            <button type="submit" class="btn btn-success w-100">Registrarse</button>
-          </form>
-          <form action="/" method="get">
-            <button type="submit" class="btn btn-primary w-100 mt-3">Inicio</button>
-          </form>
+            <!-- Panel de registro -->
+            <div class="login-wrap p-4 p-lg-5">
+              <!-- Mostrar mensajes flash -->
+              {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+              {% for category, message in messages %}
+              <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+              {% endfor %}
+              {% endif %}
+              {% endwith %}
+
+              <div class="d-flex">
+                <div class="w-100">
+                  <h3 class="mb-4">Registro de Usuario</h3>
+                </div>
+              </div>
+
+              <!-- Sección de cámara -->
+              <div id="camera-container" class="mb-4">
+                <video id="webcam" autoplay playsinline></video>
+                <canvas id="canvas"></canvas>
+                <div id="face-status">No se detecta rostro</div>
+                <div class="btn-group w-100" role="group">
+                  <button type="button" id="startCamera" class="btn btn-primary">Iniciar Cámara</button>
+                  <button type="button" id="takePhoto" class="btn btn-success" disabled>Tomar Foto</button>
+                  <button type="button" id="retakePhoto" class="btn btn-warning" style="display: none;">Nueva Foto</button>
+                </div>
+              </div>
+
+              <!-- Formulario de registro -->
+              <form action="/register" method="post" enctype="multipart/form-data" class="signin-form">
+                <div class="form-group mb-3">
+                  <label class="label" for="name">Nombre</label>
+                  <input type="text" class="form-control" name="name" placeholder="Ingresa tu nombre" required>
+                </div>
+                
+                <div class="form-group mb-3">
+                  <label class="label" for="surnames">Apellidos</label>
+                  <input type="text" class="form-control" name="surnames" placeholder="Ingresa tus apellidos" required>
+                </div>
+                
+                <div class="form-group mb-3">
+                  <label class="label" for="email">Email</label>
+                  <input type="email" class="form-control" name="email" placeholder="Ingresa tu email" required>
+                </div>
+                
+                <div class="form-group mb-3">
+                  <label class="label" for="password">Contraseña</label>
+                  <input type="password" class="form-control" name="password" placeholder="Ingresa tu contraseña" required>
+                </div>
+                
+                <div class="form-group mb-3">
+                  <label class="label" for="confirm_password">Confirmar Contraseña</label>
+                  <input type="password" class="form-control" name="confirm_password" placeholder="Confirma tu contraseña" required>
+                </div>
+                
+                <input type="hidden" name="profile_photo" id="profile_photo">
+                
+                <div class="form-group">
+                  <button type="submit" class="form-control btn btn-primary submit px-3">Registrarse</button>
+                </div>
+              </form>
+            </div>
+
+          </div>
         </div>
       </div>
     </div>
-  </main>
+  </section>
 
   <script>
     let stream = null;
