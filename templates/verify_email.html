@@ -4,45 +4,247 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Verificación de Correo</title>
+  <title>Verificación de Correo - Sistema de Reconocimiento Facial</title>
+  
+  <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+  
+  <style>
+    body {
+      font-family: "Lato", Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.8;
+      font-weight: normal;
+      background: #f8f9fd;
+      color: gray;
+    }
+
+    .ftco-section {
+      padding: 3em 0;
+    }
+
+    .heading-section {
+      font-size: 28px;
+      color: #000;
+    }
+
+    .wrap {
+      width: 100%;
+      border-radius: 5px;
+      -webkit-box-shadow: 0px 10px 34px -15px rgba(0, 0, 0, 0.24);
+      -moz-box-shadow: 0px 10px 34px -15px rgba(0, 0, 0, 0.24);
+      box-shadow: 0px 10px 34px -15px rgba(0, 0, 0, 0.24);
+    }
+
+    .text-wrap {
+      background: #f75959;
+      background: linear-gradient(135deg, #f75959 0%, #f35587 100%);
+      color: #fff;
+    }
+
+    .text-wrap .text h2 {
+      font-weight: 900;
+      color: #fff;
+    }
+
+    .login-wrap {
+      position: relative;
+      background: #fff;
+    }
+
+    .login-wrap h3 {
+      font-weight: 300;
+    }
+
+    .form-group .label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #000;
+      font-weight: 700;
+    }
+
+    .form-control {
+      height: 48px;
+      background: rgba(0, 0, 0, 0.05);
+      color: #000;
+      font-size: 16px;
+      border-radius: 50px;
+      -webkit-box-shadow: none;
+      box-shadow: none;
+      border: 1px solid transparent;
+      padding-left: 20px;
+      padding-right: 20px;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .form-control:focus, .form-control:active {
+      outline: none !important;
+      -webkit-box-shadow: none;
+      box-shadow: none;
+      background: rgba(0, 0, 0, 0.07);
+      border-color: transparent;
+    }
+
+    .btn {
+      cursor: pointer;
+      -webkit-box-shadow: none !important;
+      box-shadow: none !important;
+      font-size: 15px;
+      padding: 10px 20px;
+      border-radius: 50px;
+    }
+
+    .btn.btn-primary {
+      background: linear-gradient(135deg, #f75959 0%, #f35587 100%);
+      border: 1px solid #f35588;
+      color: #fff;
+    }
+
+    .btn.btn-primary:hover {
+      border: 1px solid #f35588;
+      background: #f35588;
+      color: #fff;
+    }
+
+    .btn.btn-success {
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      border: 1px solid #28a745;
+      color: #fff;
+    }
+
+    .btn.btn-warning {
+      background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+      border: 1px solid #ffc107;
+      color: #fff;
+    }
+
+    .btn.btn-white {
+      background: #fff;
+      border: 1px solid #fff;
+      color: #fff;
+    }
+
+    .btn.btn-white:hover {
+      border: 1px solid #fff;
+      background: transparent;
+      color: #fff;
+    }
+
+    .btn.btn-white.btn-outline-white {
+      border: 1px solid #fff;
+      background: transparent;
+      color: #fff;
+    }
+
+    .btn.btn-white.btn-outline-white:hover {
+      border: 1px solid transparent;
+      background: #fff;
+      color: #000;
+    }
+
+    .alert {
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    h1, h2, h3, h4, h5 {
+      line-height: 1.5;
+      font-weight: 400;
+      font-family: "Lato", Arial, sans-serif;
+      color: #000;
+    }
+
+    #timer {
+      font-weight: bold;
+    }
+
+    .verification-info {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .verification-info i {
+      font-size: 3rem;
+      color: #f35588;
+      margin-bottom: 10px;
+    }
+  </style>
 </head>
 <body>
-  <main class="d-flex">
-    <div class="container-fluid row m-0 vh-100 justify-content-center align-items-center">
-      <div class="card shadow w-50">
-        <div class="card-body">
+  <section class="ftco-section">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-6 text-center mb-5">
+          <h2 class="heading-section">Verificación de Correo Electrónico</h2>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-md-12 col-lg-10">
+          <div class="wrap d-md-flex">
+            
+            <!-- Panel lateral con gradiente -->
+            <div class="text-wrap p-4 p-lg-5 text-center d-flex align-items-center order-md-last">
+              <div class="text w-100">
+                <div class="verification-info">
+                  <i class="fa fa-envelope-o"></i>
+                </div>
+                <h2>¡Casi listo!</h2>
+                <p>Te hemos enviado un código de verificación a tu correo electrónico</p>
+                <p>Revisa tu bandeja de entrada y spam</p>
+                <a href="/" class="btn btn-white btn-outline-white mt-3">Volver al Inicio</a>
+              </div>
+            </div>
 
-          <!-- Mostrar mensajes flash -->
-          {% with messages = get_flashed_messages(with_categories=true) %}
-          {% if messages %}
-          {% for category, message in messages %}
-          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <!-- Panel de verificación -->
+            <div class="login-wrap p-4 p-lg-5">
+              <!-- Mostrar mensajes flash -->
+              {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+              {% for category, message in messages %}
+              <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+              {% endfor %}
+              {% endif %}
+              {% endwith %}
+
+              <div class="d-flex">
+                <div class="w-100">
+                  <h3 class="mb-4">Verificar Código</h3>
+                </div>
+              </div>
+
+              <!-- Formulario de verificación -->
+              <form action="/verify_email" method="post" class="signin-form">
+                <div class="form-group mb-3">
+                  <label class="label" for="verification_code">Código de Verificación</label>
+                  <input type="text" class="form-control" name="verification_code" placeholder="Ingresa el código de 6 dígitos" required inputmode="numeric" pattern="\d*" maxlength="6">
+                </div>
+                
+                <div class="form-group">
+                  <button type="submit" class="form-control btn btn-success submit px-3">Verificar Código</button>
+                </div>
+              </form>
+
+              <!-- Botón para reenviar el código de verificación -->
+              <form id="resend-form" action="/resend_verification" method="post">
+                <div class="form-group">
+                  <button type="submit" id="resend-button" class="form-control btn btn-warning submit px-3" disabled>
+                    Reenviar Código <span id="timer">60</span>s
+                  </button>
+                </div>
+              </form>
+            </div>
+
           </div>
-          {% endfor %}
-          {% endif %}
-          {% endwith %}
-
-          <!-- Formulario de verificación -->
-          <form action="/verify_email" method="post">
-            <h3 class="text-center">Verificación de Correo</h3>
-            <h5 class="text-center">Ingresa el código de verificación que se te ha enviado</h5>
-            <label>Código de Verificación</label>
-            <input type="text" class="form-control mb-3" name="verification_code" required inputmode="numeric" pattern="\d*">
-            <button type="submit" class="btn btn-success w-100">Verificar</button>
-          </form>
-
-          <!-- Botón para reenviar el código de verificación -->
-          <form id="resend-form" action="/resend_verification" method="post">
-            <button type="submit" id="resend-button" class="btn btn-warning w-100 mt-3" disabled>Reenviar Código de Verificación <span id="timer">60</span>s</button>
-          </form>
         </div>
       </div>
     </div>
-  </main>
+  </section>
 
   <script>
     document.addEventListener("DOMContentLoaded", function() {
