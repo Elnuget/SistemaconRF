@@ -2,9 +2,310 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Python - Flask - Reconocimiento Facial</title>
+    <title>Sistema de Reconocimiento Facial</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            font-family: "Lato", Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.8;
+            font-weight: normal;
+            background: #f8f9fd;
+            color: gray;
+            margin: 0;
+            padding: 0;
+        }
+
+        .ftco-section {
+            padding: 4em 0;
+        }
+
+        .wrap {
+            width: 100%;
+            border-radius: 10px;
+            -webkit-box-shadow: 0px 10px 34px -15px rgba(0, 0, 0, 0.24);
+            -moz-box-shadow: 0px 10px 34px -15px rgba(0, 0, 0, 0.24);
+            box-shadow: 0px 10px 34px -15px rgba(0, 0, 0, 0.24);
+            overflow: hidden;
+        }
+
+        .text-wrap {
+            background: #f75959;
+            background: -moz-linear-gradient(-45deg, #f75959 0%, #f35587 100%);
+            background: -webkit-gradient(left top, right bottom, color-stop(0%, #f75959), color-stop(100%, #f35587));
+            background: -webkit-linear-gradient(-45deg, #f75959 0%, #f35587 100%);
+            background: -o-linear-gradient(-45deg, #f75959 0%, #f35587 100%);
+            background: -ms-linear-gradient(-45deg, #f75959 0%, #f35587 100%);
+            background: -webkit-linear-gradient(315deg, #f75959 0%, #f35587 100%);
+            background: -o-linear-gradient(315deg, #f75959 0%, #f35587 100%);
+            background: linear-gradient(135deg, #f75959 0%, #f35587 100%);
+            color: #fff;
+            padding: 4em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .text-wrap .text h2 {
+            font-weight: 900;
+            color: #fff;
+            margin-bottom: 1rem;
+            font-size: 2.5rem;
+        }
+
+        .text-wrap .text p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .login-wrap {
+            position: relative;
+            background: #fff;
+            padding: 4em;
+        }
+
+        .login-wrap h3 {
+            font-weight: 300;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: #000;
+            font-size: 1.8rem;
+        }
+
+        .login-wrap h5 {
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: #666;
+        }
+
+        .form-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group .label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #000;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .form-control {
+            height: 48px;
+            background: rgba(0, 0, 0, 0.05);
+            color: #000;
+            font-size: 16px;
+            border-radius: 50px;
+            -webkit-box-shadow: none;
+            box-shadow: none;
+            border: 1px solid transparent;
+            padding-left: 20px;
+            padding-right: 20px;
+            width: 100%;
+            -webkit-transition: all 0.2s ease-in-out;
+            -o-transition: all 0.2s ease-in-out;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .form-control:focus {
+            outline: none !important;
+            -webkit-box-shadow: none;
+            box-shadow: none;
+            background: rgba(0, 0, 0, 0.07);
+            border-color: transparent;
+        }
+
+        .btn {
+            cursor: pointer;
+            -webkit-box-shadow: none !important;
+            box-shadow: none !important;
+            font-size: 15px;
+            padding: 12px 25px;
+            border-radius: 50px;
+            margin: 5px 0;
+            border: none;
+            -webkit-transition: all 0.2s ease-in-out;
+            -o-transition: all 0.2s ease-in-out;
+            transition: all 0.2s ease-in-out;
+            font-weight: 500;
+        }
+
+        .btn:hover, .btn:active, .btn:focus {
+            outline: none;
+        }
+
+        .btn-primary {
+            background: #f35588;
+            background: linear-gradient(135deg, #f75959 0%, #f35587 100%);
+            color: #fff;
+            border: 1px solid #f35588;
+        }
+
+        .btn-primary:hover {
+            background: #f35588;
+            border: 1px solid #f35588;
+            color: #fff;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: #fff;
+            border: 1px solid #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            border: 1px solid #5a6268;
+            color: #fff;
+            transform: translateY(-1px);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: #fff;
+            border: 1px solid #28a745;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+            border: 1px solid #218838;
+            color: #fff;
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            color: #666;
+            cursor: not-allowed;
+            border: 1px solid #ccc;
+            transform: none;
+        }
+
+        #face-login-container {
+            background: rgba(0, 0, 0, 0.02);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        #faceLoginWebcam {
+            width: 100%;
+            max-width: 400px;
+            height: 300px;
+            border: 3px solid #f35588;
+            border-radius: 15px;
+            margin: 15px 0;
+            box-shadow: 0 8px 25px rgba(243, 85, 136, 0.2);
+        }
+
+        #face-login-status {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        #closest-match-container {
+            background: rgba(243, 85, 136, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        #closest-match-image {
+            max-width: 150px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        #user-images-container {
+            background: rgba(0, 0, 0, 0.02);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .img-thumbnail {
+            border: 2px solid #f35588;
+            border-radius: 10px;
+            transition: transform 0.2s ease;
+        }
+
+        .img-thumbnail:hover {
+            transform: scale(1.05);
+        }
+
+        .alert {
+            border-radius: 15px;
+            border: none;
+            font-weight: 500;
+        }
+
+        .modal-content {
+            border-radius: 15px;
+            border: none;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #f75959 0%, #f35587 100%);
+            color: white;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .modal-title {
+            font-weight: 600;
+        }
+
+        h1, h2, h3, h4, h5 {
+            line-height: 1.5;
+            font-weight: 400;
+            font-family: "Lato", Arial, sans-serif;
+            color: #000;
+        }
+
+        @media (max-width: 991.98px) {
+            .text-wrap, .login-wrap {
+                width: 100%;
+            }
+            .wrap {
+                flex-direction: column;
+            }
+            .text-wrap {
+                padding: 2em;
+            }
+            .login-wrap {
+                padding: 2em;
+            }
+            .text-wrap .text h2 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .text-wrap, .login-wrap {
+                padding: 1.5em;
+            }
+            .text-wrap .text h2 {
+                font-size: 1.8rem;
+            }
+            #faceLoginWebcam {
+                max-width: 100%;
+                height: auto;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Modal de Aviso de Privacidad -->
@@ -45,226 +346,268 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <main class="d-flex">
-        <div class="container-fluid row m-0 vh-100 justify-content-center align-items-center">
-            <div class="card shadow w-50">
-                <div class="card-body">
-                    {% with messages = get_flashed_messages(with_categories=true) %}
-                    {% if messages %}
-                        {% for category, message in messages %}
-                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                            {{ message }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>    <section class="ftco-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-10">
+                    <div class="wrap d-md-flex">
+                        <div class="text-wrap p-4 p-lg-5 text-center d-flex align-items-center order-md-last">
+                            <div class="text w-100">
+                                <h2>Bienvenido al Sistema</h2>
+                                <p>Sistema avanzado de reconocimiento facial con tecnología de inteligencia artificial para autenticación segura y confiable.</p>
+                                <p>Utiliza tu rostro como clave de acceso de manera rápida y segura.</p>
+                            </div>
                         </div>
-                        {% endfor %}
-                    {% endif %}
-                    {% endwith %}
+                        <div class="login-wrap p-4 p-lg-5">
+                            {% with messages = get_flashed_messages(with_categories=true) %}
+                            {% if messages %}
+                                {% for category, message in messages %}
+                                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                {% endfor %}
+                            {% endif %}
+                            {% endwith %}
 
-                    <!-- LOGIN NORMAL -->
-                    <form action="/login" method="post">
-                        <h3 class="text-center">Sistema de Reconocimiento Facial</h3>
-                        <h5 class="text-center">Login</h5>
-                        <label>Email</label>
-                        <input type="email" class="form-control mb-3" name="email" required>
-                        <label>Contraseña</label>
-                        <input type="password" class="form-control mb-3" name="password" required>
-                        <button type="submit" class="btn btn-primary w-100">Acceder</button>
-                    </form>
+                            <div class="d-flex">
+                                <div class="w-100">
+                                    <h3 class="mb-4">Sistema de Reconocimiento Facial</h3>
+                                </div>
+                            </div>
 
-                    <!-- LOGIN CON ROSTRO -->
-                    <div class="text-center mt-3">
-                        <button type="button" id="startFaceLogin" class="btn btn-secondary w-100">
-                            Iniciar sesión con reconocimiento facial
-                        </button>
-                    </div>
+                            <!-- LOGIN NORMAL -->
+                            <form action="/login" method="post" class="signin-form">
+                                <div class="form-group mb-3">
+                                    <label class="label" for="email">Email</label>
+                                    <input type="email" class="form-control" name="email" placeholder="Email" required>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label class="label" for="password">Contraseña</label>
+                                    <input type="password" class="form-control" name="password" placeholder="Contraseña" required>
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="form-control btn btn-primary submit px-3">Acceder</button>
+                                </div>
+                            </form>
 
-                    <div id="face-login-container" class="text-center mt-3" style="display: none;">
-                        <video id="faceLoginWebcam" autoplay playsinline></video>
-                        <div id="face-login-status" class="mt-2">No se detecta rostro</div>
-                        <button type="button" id="captureFaceLogin" class="btn btn-success mt-3" disabled>
-                            Capturar Rostro
-                        </button>
-                        <div id="closest-match-container" class="mt-3" style="display: none;">
-                            <h5>Foto más cercana</h5>
-                            <img id="closest-match-image" src="" alt="Closest Match" class="img-fluid rounded">
+                            <!-- LOGIN CON ROSTRO -->
+                            <div class="text-center mt-3">
+                                <p class="text-center">O utiliza reconocimiento facial</p>
+                                <button type="button" id="startFaceLogin" class="form-control btn btn-secondary submit px-3">
+                                    <i class="fa fa-camera mr-2"></i>Iniciar sesión con rostro
+                                </button>
+                            </div>
+
+                            <div id="face-login-container" class="text-center mt-3" style="display: none;">
+                                <h5 class="mb-3">Posiciona tu rostro frente a la cámara</h5>
+                                <video id="faceLoginWebcam" autoplay playsinline></video>
+                                <div id="face-login-status" class="mt-2">No se detecta rostro</div>
+                                <button type="button" id="captureFaceLogin" class="btn btn-success mt-3" disabled>
+                                    <i class="fa fa-check mr-2"></i>Capturar Rostro
+                                </button>
+                                <div id="closest-match-container" class="mt-3" style="display: none;">
+                                    <h5>Foto más cercana</h5>
+                                    <img id="closest-match-image" src="" alt="Closest Match" class="img-fluid rounded">
+                                </div>
+                            </div>
+
+                            <!-- Sección para mostrar todas las imágenes de usuarios -->
+                            <div id="user-images-container" class="text-center mt-3" style="display: none;">
+                                <h5>Usuarios Registrados</h5>
+                                <div id="user-images" class="d-flex flex-wrap justify-content-center"></div>
+                            </div>
+
+                            <!-- Botón de registro -->
+                            <form action="/register" method="get" class="mt-4">
+                                <p class="text-center">¿No tienes cuenta?</p>
+                                <button type="submit" class="form-control btn btn-success submit px-3">
+                                    <i class="fa fa-user-plus mr-2"></i>Registrarse
+                                </button>
+                            </form>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>    <script>
+        const startFaceLoginButton = document.getElementById('startFaceLogin');
+        const faceLoginContainer = document.getElementById('face-login-container');
+        const faceLoginWebcam = document.getElementById('faceLoginWebcam');
+        const captureFaceLoginButton = document.getElementById('captureFaceLogin');
+        const faceLoginStatus = document.getElementById('face-login-status');
+        const closestMatchContainer = document.getElementById('closest-match-container');
+        const closestMatchImage = document.getElementById('closest-match-image');
+        const userImagesContainer = document.getElementById('user-images');
 
-                    <!-- Sección para mostrar todas las imágenes de usuarios -->
-                    <div id="user-images-container" class="text-center mt-3" style="display: none;">
-                        <h5>Imágenes de Usuarios Registrados</h5>
-                        <div id="user-images" class="d-flex flex-wrap justify-content-center"></div>
-                    </div>
+        let faceLoginStream = null;
+        let userImages = []; // Array global de {id, image}
+        let loginInProgress = false;
 
-                    <script>
-                        const startFaceLoginButton = document.getElementById('startFaceLogin');
-                        const faceLoginContainer = document.getElementById('face-login-container');
-                        const faceLoginWebcam = document.getElementById('faceLoginWebcam');
-                        const captureFaceLoginButton = document.getElementById('captureFaceLogin');
-                        const faceLoginStatus = document.getElementById('face-login-status');
-                        const closestMatchContainer = document.getElementById('closest-match-container');
-                        const closestMatchImage = document.getElementById('closest-match-image');
-                        const userImagesContainer = document.getElementById('user-images');
+        // Al hacer clic en "Iniciar sesión con reconocimiento facial"
+        startFaceLoginButton.addEventListener('click', async () => {
+            try {
+                faceLoginStream = await navigator.mediaDevices.getUserMedia({ video: true });
+                faceLoginWebcam.srcObject = faceLoginStream;
+                faceLoginContainer.style.display = 'block';
+                userImagesContainer.style.display = 'block';
+                
+                // Cargamos primero las imágenes de usuarios
+                await loadUserImages();
+                // Iniciamos bucle de detección
+                startFaceDetection();
+            } catch (err) {
+                console.error('Error al acceder a la cámara:', err);
+                alert('Error al acceder a la cámara. Por favor, asegúrate de permitir el acceso a la cámara.');
+            }
+        });
 
-                        let faceLoginStream = null;
-                        let userImages = []; // Array global de {id, image}
-                        let loginInProgress = false;
+        // Descarga de las imágenes de usuarios
+        async function loadUserImages() {
+            try {
+                const response = await fetch('/get-user-images');
+                userImages = await response.json(); // Array de objetos: [{id, image}, ...]
+                displayUserImages(userImages);
+            } catch (error) {
+                console.error('Error al cargar las imágenes:', error);
+            }
+        }
 
-                        // Al hacer clic en "Iniciar sesión con reconocimiento facial"
-                        startFaceLoginButton.addEventListener('click', async () => {
-                            try {
-                                faceLoginStream = await navigator.mediaDevices.getUserMedia({ video: true });
-                                faceLoginWebcam.srcObject = faceLoginStream;
-                                faceLoginContainer.style.display = 'block';
-                                
-                                // Cargamos primero las imágenes de usuarios
-                                await loadUserImages();
-                                // Iniciamos bucle de detección
-                                startFaceDetection();
-                            } catch (err) {
-                                console.error('Error al acceder a la cámara:', err);
-                                alert('Error al acceder a la cámara');
-                            }
-                        });
+        // Muestra las miniaturas de cada imagen en la parte de abajo
+        function displayUserImages(images) {
+            userImagesContainer.innerHTML = '<h5>Usuarios Registrados</h5><div id="user-images" class="d-flex flex-wrap justify-content-center"></div>';
+            const userImagesDiv = document.getElementById('user-images');
+            images.forEach(obj => {
+                const imgElement = document.createElement('img');
+                imgElement.src = `data:image/jpeg;base64,${obj.image}`;
+                imgElement.classList.add('img-thumbnail', 'm-1');
+                imgElement.style.width = '100px';
+                imgElement.style.height = '100px';
+                userImagesDiv.appendChild(imgElement);
+            });
+        }
 
-                        // Descarga de las imágenes de usuarios
-                        async function loadUserImages() {
-                            try {
-                                const response = await fetch('/get-user-images');
-                                userImages = await response.json(); // Array de objetos: [{id, image}, ...]
-                                displayUserImages(userImages);
-                            } catch (error) {
-                                console.error('Error al cargar las imágenes:', error);
-                            }
-                        }
+        // Bucle de detección continua
+        async function startFaceDetection() {
+            while (faceLoginWebcam.srcObject) {
+                const canvas = document.createElement('canvas');
+                canvas.width = faceLoginWebcam.videoWidth;
+                canvas.height = faceLoginWebcam.videoHeight;
+                canvas.getContext('2d').drawImage(faceLoginWebcam, 0, 0);
+                const faceImage = canvas.toDataURL('image/jpeg');
 
-                        // Muestra las miniaturas de cada imagen en la parte de abajo
-                        function displayUserImages(images) {
-                            userImagesContainer.innerHTML = '';
-                            images.forEach(obj => {
-                                const imgElement = document.createElement('img');
-                                imgElement.src = `data:image/jpeg;base64,${obj.image}`;
-                                imgElement.classList.add('img-thumbnail', 'm-1');
-                                imgElement.style.width = '100px';
-                                imgElement.style.height = '100px';
-                                userImagesContainer.appendChild(imgElement);
-                            });
-                        }
+                try {
+                    // Llamamos a /detect-face para verificar si hay un rostro
+                    const response = await fetch('/detect-face', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            image: faceImage,
+                            user_images: userImages
+                        }),
+                        headers: { 'Content-Type': 'application/json' }
+                    });
 
-                        // Bucle de detección continua
-                        async function startFaceDetection() {
-                            while (faceLoginWebcam.srcObject) {
-                                const canvas = document.createElement('canvas');
-                                canvas.width = faceLoginWebcam.videoWidth;
-                                canvas.height = faceLoginWebcam.videoHeight;
-                                canvas.getContext('2d').drawImage(faceLoginWebcam, 0, 0);
-                                const faceImage = canvas.toDataURL('image/jpeg');
+                    const result = await response.json();
+                    if (result.face_detected) {
+                        faceLoginStatus.textContent = 'Rostro detectado ✓';
+                        faceLoginStatus.style.color = '#28a745';
+                        faceLoginStatus.style.background = 'rgba(40, 167, 69, 0.1)';
+                        captureFaceLoginButton.disabled = false;
 
-                                try {
-                                    // Llamamos a /detect-face para verificar si hay un rostro
-                                    const response = await fetch('/detect-face', {
-                                        method: 'POST',
-                                        body: JSON.stringify({
-                                            image: faceImage,
-                                            user_images: userImages
-                                        }),
-                                        headers: { 'Content-Type': 'application/json' }
-                                    });
-
-                                    const result = await response.json();
-                                    if (result.face_detected) {
-                                        faceLoginStatus.textContent = 'Rostro detectado';
-                                        faceLoginStatus.style.color = 'green';
-                                        captureFaceLoginButton.disabled = false;
-
-                                        if (result.closest_match && !loginInProgress) {
-                                            loginInProgress = true;
-                                            const canvas = document.createElement('canvas');
-                                            canvas.width = faceLoginWebcam.videoWidth;
-                                            canvas.height = faceLoginWebcam.videoHeight;
-                                            canvas.getContext('2d').drawImage(faceLoginWebcam, 0, 0);
-                                            const faceImage = canvas.toDataURL('image/jpeg');
-                                            try {
-                                                const resp = await fetch('/login-face', {
-                                                    method: 'POST',
-                                                    body: JSON.stringify({ image: faceImage, user_images: userImages }),
-                                                    headers: { 'Content-Type': 'application/json' }
-                                                });
-                                                const data = await resp.json();
-                                                if (data.success) {
-                                                    window.location.href = '/';
-                                                } else {
-                                                    alert(data.message || 'No se pudo iniciar sesión con reconocimiento facial');
-                                                    loginInProgress = false;
-                                                }
-                                            } catch (error) {
-                                                console.error('Error en login facial:', error);
-                                                loginInProgress = false;
-                                            }
-                                        }
-                                    } else {
-                                        faceLoginStatus.textContent = 'No se detecta rostro';
-                                        faceLoginStatus.style.color = 'red';
-                                        captureFaceLoginButton.disabled = true;
-                                        closestMatchContainer.style.display = 'none';
-                                    }
-                                } catch (error) {
-                                    console.error('Error en la detección facial:', error);
-                                }
-
-                                // Esperamos 500ms para no saturar el servidor
-                                await new Promise(resolve => setTimeout(resolve, 500));
-                            }
-                        }
-
-                        // Al presionar "Capturar Rostro" hacemos la petición final de login
-                        captureFaceLoginButton.addEventListener('click', async () => {
+                        if (result.closest_match && !loginInProgress) {
+                            loginInProgress = true;
                             const canvas = document.createElement('canvas');
                             canvas.width = faceLoginWebcam.videoWidth;
                             canvas.height = faceLoginWebcam.videoHeight;
                             canvas.getContext('2d').drawImage(faceLoginWebcam, 0, 0);
                             const faceImage = canvas.toDataURL('image/jpeg');
-
                             try {
-                                const response = await fetch('/login-face', {
+                                const resp = await fetch('/login-face', {
                                     method: 'POST',
-                                    body: JSON.stringify({
-                                        image: faceImage,
-                                        user_images: userImages
-                                    }),
+                                    body: JSON.stringify({ image: faceImage, user_images: userImages }),
                                     headers: { 'Content-Type': 'application/json' }
                                 });
-
-                                const result = await response.json();
-                                if (result.success) {
-                                    // Redirigimos al home
-                                    window.location.href = '/';
+                                const data = await resp.json();
+                                if (data.success) {
+                                    faceLoginStatus.textContent = 'Acceso autorizado! Redirigiendo...';
+                                    faceLoginStatus.style.color = '#28a745';
+                                    setTimeout(() => {
+                                        window.location.href = '/';
+                                    }, 1000);
                                 } else {
-                                    alert(result.message || 'No se pudo iniciar sesión con reconocimiento facial');
+                                    alert(data.message || 'No se pudo iniciar sesión con reconocimiento facial');
+                                    loginInProgress = false;
                                 }
                             } catch (error) {
-                                console.error('Error en el login facial:', error);
-                            } finally {
-                                // Parar la cámara
-                                if (faceLoginStream) {
-                                    faceLoginStream.getTracks().forEach(track => track.stop());
-                                }
-                                faceLoginContainer.style.display = 'none';
+                                console.error('Error en login facial:', error);
+                                loginInProgress = false;
                             }
-                        });
-                    </script>
+                        }
+                    } else {
+                        faceLoginStatus.textContent = 'No se detecta rostro ✗';
+                        faceLoginStatus.style.color = '#dc3545';
+                        faceLoginStatus.style.background = 'rgba(220, 53, 69, 0.1)';
+                        captureFaceLoginButton.disabled = true;
+                        closestMatchContainer.style.display = 'none';
+                    }
+                } catch (error) {
+                    console.error('Error en la detección facial:', error);
+                }
 
-                    <!-- Botón de registro -->
-                    <form action="/register" method="get">
-                        <button type="submit" class="btn btn-success w-100 mt-3">Registrarse</button>
-                    </form>
+                // Esperamos 500ms para no saturar el servidor
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+        }
 
-                </div>
-            </div>
-        </div>
-    </main>
+        // Al presionar "Capturar Rostro" hacemos la petición final de login
+        captureFaceLoginButton.addEventListener('click', async () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = faceLoginWebcam.videoWidth;
+            canvas.height = faceLoginWebcam.videoHeight;
+            canvas.getContext('2d').drawImage(faceLoginWebcam, 0, 0);
+            const faceImage = canvas.toDataURL('image/jpeg');
+
+            faceLoginStatus.textContent = 'Procesando...';
+            faceLoginStatus.style.color = '#17a2b8';
+
+            try {
+                const response = await fetch('/login-face', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        image: faceImage,
+                        user_images: userImages
+                    }),
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    faceLoginStatus.textContent = 'Acceso autorizado! Redirigiendo...';
+                    faceLoginStatus.style.color = '#28a745';
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 1000);
+                } else {
+                    faceLoginStatus.textContent = 'Acceso denegado';
+                    faceLoginStatus.style.color = '#dc3545';
+                    alert(result.message || 'No se pudo iniciar sesión con reconocimiento facial');
+                }
+            } catch (error) {
+                console.error('Error en el login facial:', error);
+                faceLoginStatus.textContent = 'Error en el procesamiento';
+                faceLoginStatus.style.color = '#dc3545';
+            } finally {
+                // Parar la cámara después de un tiempo
+                setTimeout(() => {
+                    if (faceLoginStream) {
+                        faceLoginStream.getTracks().forEach(track => track.stop());
+                    }
+                    faceLoginContainer.style.display = 'none';
+                    userImagesContainer.style.display = 'none';
+                }, 2000);
+            }
+        });
+    </script>
 
     <script>
         // Mostrar modal de privacidad automáticamente al cargar la página
