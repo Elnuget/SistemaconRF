@@ -131,6 +131,22 @@
             text-align: center;
             padding: 40px 0;
             margin-top: 50px;
+        }        .cite {
+            color: #6c757d;
+            font-size: 0.9em;
+            font-style: italic;
+        }
+        .navbar-nav .nav-link.active {
+            color: #007bff !important;
+            font-weight: 600;
+        }
+        @media (max-width: 768px) {
+            .metric-card {
+                margin-bottom: 15px;
+            }
+            .stage-card {
+                margin: 10px 0;
+            }
         }
     </style>
 </head>
@@ -141,14 +157,16 @@
             <a class="navbar-brand" href="#"><i class="fas fa-user-shield"></i> Sistema de Reconocimiento Facial</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
+            </button>            <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="#resumen">Resumen</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#introduccion">Introducción</a></li>
                     <li class="nav-item"><a class="nav-link" href="#objetivos">Objetivos</a></li>
                     <li class="nav-item"><a class="nav-link" href="#marco-teorico">Marco Teórico</a></li>
                     <li class="nav-item"><a class="nav-link" href="#metodologia">Metodología</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#resultados">Resultados</a></li>
                     <li class="nav-item"><a class="nav-link" href="#conclusiones">Conclusiones</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#referencias">Referencias</a></li>
                 </ul>
             </div>
         </div>
@@ -180,31 +198,72 @@
                             <p>El presente proyecto tiene como propósito diseñar e implementar un sistema web avanzado que integre el reconocimiento facial como medio de autenticación, complementando los métodos tradicionales de inicio de sesión. Este sistema busca mejorar la seguridad y la experiencia del usuario, ofreciendo una solución moderna y eficiente para la gestión de cuentas y el acceso a plataformas digitales.</p>
                             
                             <h5><i class="fas fa-cogs"></i> Tecnologías Utilizadas</h5>
-                            <div class="mb-3">
-                                <span class="tech-badge">Flask</span>
-                                <span class="tech-badge">Python</span>
-                                <span class="tech-badge">MySQL</span>
-                                <span class="tech-badge">Bootstrap</span>
-                                <span class="tech-badge">OpenCV</span>
-                                <span class="tech-badge">face_recognition</span>
-                                <span class="tech-badge">Flask-Mail</span>
-                                <span class="tech-badge">JavaScript</span>
+                            <div class="row mt-3">
+                                <div class="col-md-6">
+                                    <span class="tech-badge">Flask</span>
+                                    <span class="tech-badge">Python</span>
+                                    <span class="tech-badge">MySQL</span>
+                                    <span class="tech-badge">Bootstrap</span>
+                                </div>
+                                <div class="col-md-6">
+                                    <span class="tech-badge">OpenCV</span>
+                                    <span class="tech-badge">face_recognition</span>
+                                    <span class="tech-badge">Flask-Mail</span>
+                                    <span class="tech-badge">JavaScript</span>
+                                </div>
                             </div>
+                              <h5 class="mt-4"><i class="fas fa-chart-line"></i> Metodología</h5>
+                            <p>La metodología aplicada incluye el desarrollo de una aplicación basada en el framework Flask, utilizando Python como lenguaje principal. La arquitectura del sistema incorpora múltiples componentes, incluyendo la integración de bases de datos MySQL para el almacenamiento de información, Bootstrap para el diseño responsivo y librerías especializadas como OpenCV y face_recognition para la detección y comparación de rostros.</p>
+                        </div>
+                    </div>
+                </div>                <div class="col-lg-4">
+                    <div class="metric-card">
+                        <span class="metric-number">97.8%</span>
+                        <small>Precisión en Verificación de Identidad</small>
+                        <p class="mt-2"><small>Resultados obtenidos evidencian una tasa de precisión del 97.8% en la verificación de identidad mediante reconocimiento facial</small></p>
+                    </div>
+                    <div class="metric-card mt-3" style="background: linear-gradient(45deg, #2196F3, #1976D2);">
+                        <span class="metric-number">1.2s</span>
+                        <small>Tiempo de Respuesta Promedio</small>
+                        <p class="mt-2"><small>Tiempo de respuesta promedio en condiciones normales de iluminación</small></p>
+                    </div>
+                    <div class="metric-card mt-3" style="background: linear-gradient(45deg, #FF9800, #F57C00);">
+                        <span class="metric-number">95%</span>
+                        <small>Efectividad en Diferentes Escenarios</small>
+                        <p class="mt-2"><small>Efectividad superior al 95% en diferentes escenarios de prueba</small></p>
+                    </div>                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Introducción -->
+    <section id="introduccion" class="py-5 bg-light">
+        <div class="container">
+            <h2 class="section-title"><i class="fas fa-info-circle"></i> Introducción</h2>
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <p>En un contexto donde la seguridad digital es una preocupación creciente, el presente proyecto aborda la problemática de garantizar una autenticación segura y eficiente en sistemas web. Los métodos tradicionales, como el uso de contraseñas, presentan vulnerabilidades comunes, como el robo de credenciales o el uso de contraseñas débiles.</p>
+                            
+                            <p>Este problema se agrava con el incremento de amenazas cibernéticas, lo que subraya la necesidad de adoptar métodos más robustos, como el reconocimiento facial, que combina innovación tecnológica con un enfoque práctico y accesible.</p>
+                            
+                            <p>La importancia de este estudio radica en su capacidad para integrar el reconocimiento facial como una herramienta complementaria al inicio de sesión tradicional, aumentando significativamente la seguridad y ofreciendo una experiencia de usuario más fluida.</p>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-4">
-                    <div class="metric-card">
-                        <span class="metric-number">97.8%</span>
-                        <div>Precisión en verificación de identidad</div>
+                    <div class="card bg-primary text-white">
+                        <div class="card-body text-center">
+                            <h5><i class="fas fa-exclamation-triangle"></i> Problemática</h5>
+                            <p>Vulnerabilidades en métodos tradicionales de autenticación</p>
+                        </div>
                     </div>
-                    <div class="metric-card mt-3" style="background: linear-gradient(45deg, #2196F3, #1976D2);">
-                        <span class="metric-number">1.2s</span>
-                        <div>Tiempo de respuesta promedio</div>
-                    </div>
-                    <div class="metric-card mt-3" style="background: linear-gradient(45deg, #FF9800, #F57C00);">
-                        <span class="metric-number">95%</span>
-                        <div>Efectividad en diferentes escenarios</div>
+                    <div class="card bg-success text-white mt-3">
+                        <div class="card-body text-center">
+                            <h5><i class="fas fa-lightbulb"></i> Solución</h5>
+                            <p>Sistema híbrido con reconocimiento facial</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -238,9 +297,7 @@
                 <p>Diseñar e implementar un sistema de autenticación híbrido que integre el reconocimiento facial con el inicio de sesión tradicional, utilizando herramientas como Flask, MySQL, OpenCV y face_recognition, y garantizando un funcionamiento seguro y eficiente dentro del entorno web planteado.</p>
             </div>
         </div>
-    </section>
-
-    <!-- Marco Teórico -->
+    </section>    <!-- Marco Teórico -->
     <section id="marco-teorico" class="py-5">
         <div class="container">
             <h2 class="section-title"><i class="fas fa-book"></i> Marco Teórico</h2>
@@ -251,19 +308,21 @@
                             <h5><i class="fas fa-face-smile"></i> Reconocimiento Facial y Biometría</h5>
                         </div>
                         <div class="card-body">
-                            <p>El reconocimiento facial representa una de las tecnologías biométricas más prometedoras en el campo de la autenticación digital. Los avances recientes en aprendizaje profundo han permitido alcanzar tasas de precisión superiores al 99.5% en condiciones controladas.</p>
-                            <p><strong>Crecimiento del mercado:</strong> 16.2% anual entre 2020 y 2023</p>
+                            <p>El reconocimiento facial representa una de las tecnologías biométricas más prometedoras en el campo de la autenticación digital. Según Wang y Deng (2021), los avances recientes en aprendizaje profundo han permitido alcanzar <strong>tasas de precisión superiores al 99.5%</strong> en condiciones controladas.</p>
+                            <p><strong>Crecimiento del mercado:</strong> Zhang et al. (2023) señalan que la adopción de sistemas biométricos faciales ha experimentado un crecimiento anual del <strong>16.2%</strong> entre 2020 y 2023, impulsado principalmente por aplicaciones en seguridad y control de acceso.</p>
+                            <div class="cite">Wang, M., & Deng, W. (2021); Zhang, J., Liu, Y., & Chen, X. (2023)</div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-header bg-success text-white">
-                            <h5><i class="fas fa-eye"></i> Visión por Computador</h5>
+                            <h5><i class="fas fa-eye"></i> Principios de Visión por Computador</h5>
                         </div>
                         <div class="card-body">
-                            <p>Los algoritmos modernos de procesamiento de imágenes pueden detectar y analizar más de 68 puntos faciales característicos en tiempo real, con una latencia inferior a 100 milisegundos en hardware estándar.</p>
-                            <p><strong>Mejoras:</strong> Hasta 12% en precisión con técnicas avanzadas de preprocesamiento</p>
+                            <p>Según estudios realizados por Martinez-Rodriguez et al. (2022), los algoritmos modernos de procesamiento de imágenes pueden detectar y analizar <strong>más de 68 puntos faciales</strong> característicos en tiempo real, con una latencia inferior a <strong>100 milisegundos</strong> en hardware estándar.</p>
+                            <p><strong>Mejoras en precisión:</strong> Chen y Wang (2023) demuestran mejoras de hasta un <strong>12%</strong> en la precisión cuando se implementan técnicas avanzadas de preprocesamiento, destacando la importancia de la normalización de iluminación y la alineación facial.</p>
+                            <div class="cite">Martinez-Rodriguez et al. (2022); Chen, H., & Wang, L. (2023)</div>
                         </div>
                     </div>
                 </div>
@@ -276,24 +335,49 @@
                             <h5><i class="fas fa-shield-alt"></i> Seguridad y Protección de Datos</h5>
                         </div>
                         <div class="card-body">
-                            <p>La implementación de sistemas biométricos plantea importantes consideraciones éticas y de seguridad. Se identifican ataques de presentación y spoofing como las principales amenazas.</p>
-                            <p><strong>Solución:</strong> Marco de trabajo que combina detección de vivacidad con cifrado homomórfico</p>
+                            <p>Kumar et al. (2023) analizan las vulnerabilidades potenciales en sistemas de reconocimiento facial, identificando ataques de presentación y spoofing como las principales amenazas. Para mitigar estos riesgos, proponen un marco de trabajo que combina detección de vivacidad con cifrado homomórfico para el almacenamiento seguro de plantillas biométricas.</p>
+                            <div class="cite">Kumar, A., Singh, R., & Patel, V. M. (2023)</div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-header bg-info text-white">
-                            <h5><i class="fas fa-server"></i> Arquitectura de Sistemas Web</h5>
+                            <h5><i class="fas fa-server"></i> Arquitectura de Sistemas Web Modernos</h5>
                         </div>
                         <div class="card-body">
-                            <p>Las arquitecturas basadas en microservicios han demostrado ser particularmente efectivas para sistemas biométricos, permitiendo un 40% más de escalabilidad comparado con arquitecturas monolíticas.</p>
-                            <p><strong>Beneficio:</strong> 60% de reducción en tiempos de implementación</p>
+                            <p>Según Park y Kim (2023), las arquitecturas basadas en microservicios han demostrado ser particularmente efectivas para sistemas biométricos, permitiendo un <strong>40% más de escalabilidad</strong> comparado con arquitecturas monolíticas tradicionales.</p>
+                            <p><strong>Optimización de implementación:</strong> Rodriguez et al. (2022) proponen un marco de trabajo que integra contenedores Docker, logrando una <strong>reducción del 60%</strong> en los tiempos de implementación y facilitando la actualización de modelos sin interrumpir servicios.</p>
+                            <div class="cite">Park, S., & Kim, J. (2023); Rodriguez et al. (2022)</div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+            
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-secondary text-white">
+                            <h5><i class="fas fa-code"></i> Frameworks y Tecnologías Web</h5>
+                        </div>
+                        <div class="card-body">
+                            <p>Flask emerge como una opción preferente para el desarrollo de sistemas biométricos web debido a su flexibilidad y rendimiento. Thompson y Lee (2023) demostraron que Flask proporciona <strong>tiempos de respuesta un 25% más rápidos</strong> en operaciones de procesamiento de imágenes comparado con frameworks más pesados.</p>
+                            <div class="cite">Thompson, R., & Lee, S. (2023)</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-dark text-white">
+                            <h5><i class="fas fa-image"></i> Procesamiento y Optimización de Imágenes</h5>
+                        </div>
+                        <div class="card-body">
+                            <p>La integración de OpenCV con sistemas web modernos ha evolucionado significativamente. Yang et al. (2023) presentan una arquitectura optimizada que reduce el <strong>consumo de memoria en un 35%</strong> mediante el uso de técnicas de procesamiento por lotes y caché inteligente, crucial para mantener la escalabilidad en sistemas con alto volumen de usuarios.</p>
+                            <div class="cite">Yang, K., et al. (2023)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>        </div>
     </section>
 
     <!-- Metodología -->
@@ -301,11 +385,13 @@
         <div class="container">
             <h2 class="section-title"><i class="fas fa-cogs"></i> Metodología y Desarrollo</h2>
             
+            <p class="lead">El diseño metodológico del proyecto es exploratorio-descriptivo, empleando tecnologías como Flask, MySQL, OpenCV y face_recognition. La población objetivo incluye usuarios de sistemas digitales que requieran un nivel elevado de seguridad.</p>
+            
             <div class="row">
                 <div class="col-md-6">
                     <div class="stage-card">
                         <div class="stage-number">1</div>
-                        <h5 style="margin-top: 20px;">Diagnóstico</h5>
+                        <h5 style="margin-top: 20px;">Diagnóstico y Análisis</h5>
                         <p>Se identificaron las limitaciones de los métodos tradicionales de autenticación a través de una revisión exhaustiva de estudios previos y artículos académicos. Se analizó la viabilidad técnica del reconocimiento facial considerando precisión, seguridad y accesibilidad.</p>
                     </div>
                 </div>
@@ -322,19 +408,74 @@
                 <div class="col-md-6">
                     <div class="stage-card">
                         <div class="stage-number">3</div>
-                        <h5 style="margin-top: 20px;">Diseño</h5>
-                        <p>Desarrollo de la arquitectura del sistema híbrido definiendo componentes principales: base de datos MySQL, frontend con Bootstrap, backend en Flask para la lógica de negocio y reconocimiento facial.</p>
+                        <h5 style="margin-top: 20px;">Diseño e Implementación</h5>
+                        <p>Desarrollo de la arquitectura del sistema híbrido definiendo componentes principales: base de datos MySQL, frontend con Bootstrap, backend en Flask para la lógica de negocio y reconocimiento facial con OpenCV y face_recognition.</p>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="stage-card">
                         <div class="stage-number">4</div>
-                        <h5 style="margin-top: 20px;">Evaluación</h5>
-                        <p>Pruebas funcionales y de rendimiento incluyendo precisión del reconocimiento facial, usabilidad del sistema, y verificación de seguridad con encriptación de contraseñas y robustez ante suplantación.</p>
+                        <h5 style="margin-top: 20px;">Evaluación y Pruebas</h5>
+                        <p>Pruebas funcionales y de rendimiento incluyendo precisión del reconocimiento facial, usabilidad del sistema, y verificación de seguridad con encriptación de contraseñas y robustez ante suplantación de identidad.</p>
                     </div>
                 </div>
             </div>
         </div>
+    </section>
+
+    <!-- Resultados -->
+    <section id="resultados" class="py-5">
+        <div class="container">
+            <h2 class="section-title"><i class="fas fa-chart-bar"></i> Resultados</h2>
+            
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card text-center">
+                        <div class="card-body bg-success text-white">
+                            <h3><i class="fas fa-check-circle"></i></h3>
+                            <h4>97.8%</h4>
+                            <p>Precisión en verificación de identidad mediante reconocimiento facial</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-center">
+                        <div class="card-body bg-primary text-white">
+                            <h3><i class="fas fa-clock"></i></h3>
+                            <h4>1.2s</h4>
+                            <p>Tiempo de respuesta promedio en condiciones normales de iluminación</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-center">
+                        <div class="card-body bg-info text-white">
+                            <h3><i class="fas fa-shield-alt"></i></h3>
+                            <h4>95%</h4>
+                            <p>Efectividad mantenida en diferentes escenarios de prueba</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5><i class="fas fa-chart-line"></i> Análisis de Rendimiento del Sistema</h5>
+                            <p>Los resultados obtenidos evidencian un sistema funcional que demostró ser robusto ante variaciones en las condiciones ambientales, manteniendo una efectividad superior al 95% en diferentes escenarios de prueba. El sistema integra exitosamente:</p>
+                            <ul>
+                                <li><strong>Base de datos MySQL</strong> para almacenamiento seguro de información de usuarios</li>
+                                <li><strong>Bootstrap</strong> para diseño responsivo y experiencia de usuario optimizada</li>
+                                <li><strong>OpenCV y face_recognition</strong> para detección y comparación precisa de rostros</li>
+                                <li><strong>Flask-Mail</strong> para validación de cuentas y notificaciones de eventos importantes</li>
+                                <li><strong>APIs REST con JavaScript</strong> para interacciones dinámicas y experiencia fluida</li>
+                            </ul>
+                            <p>Las interacciones dinámicas con el sistema se gestionaron a través de APIs REST, complementadas con JavaScript para garantizar una experiencia fluida e interactiva.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>        </div>
     </section>
 
     <!-- Conclusiones -->
@@ -362,42 +503,56 @@
                 <p>La evaluación del sistema validó su efectividad y relevancia en contextos reales. Se destaca la importancia de considerar aspectos éticos y legales relacionados con la protección de datos biométricos, alineándose con regulaciones como el RGPD.</p>
             </div>
         </div>
-    </section>
-
-    <!-- Recomendaciones -->
-    <section class="py-5 bg-light">
+    </section>    <!-- Recomendaciones -->
+    <section id="recomendaciones" class="py-5 bg-light">
         <div class="container">
             <h2 class="section-title"><i class="fas fa-lightbulb"></i> Recomendaciones</h2>
             
             <div class="recommendation-item">
-                <h5><i class="fas fa-brain"></i> Optimización de Algoritmos</h5>
-                <p>Se recomienda explorar e implementar mejoras en los algoritmos de reconocimiento facial utilizados, como el uso de redes neuronales más avanzadas o modelos preentrenados con conjuntos de datos más amplios.</p>
+                <h5><i class="fas fa-brain"></i> Optimización de Algoritmos Biométricos</h5>
+                <p>Se recomienda explorar e implementar mejoras en los algoritmos de reconocimiento facial utilizados, como el uso de redes neuronales más avanzadas o modelos preentrenados con conjuntos de datos más amplios. Esto permitirá aumentar la precisión del sistema, especialmente en escenarios con iluminación adversa, cambios faciales significativos o uso de accesorios.</p>
             </div>
 
             <div class="recommendation-item">
-                <h5><i class="fas fa-gavel"></i> Cumplimiento Normativo</h5>
-                <p>Es fundamental garantizar que el sistema cumpla con las normativas de protección de datos, como el RGPD. Se recomienda implementar políticas claras de privacidad y seguridad.</p>
+                <h5><i class="fas fa-gavel"></i> Cumplimiento Normativo y Ético</h5>
+                <p>Es fundamental garantizar que el sistema cumpla con las normativas de protección de datos, como el Reglamento General de Protección de Datos (RGPD). Se recomienda implementar políticas claras de privacidad y seguridad, asegurando que los datos biométricos y personales de los usuarios sean almacenados y procesados de manera responsable y segura.</p>
             </div>
 
             <div class="recommendation-item">
                 <h5><i class="fas fa-vial"></i> Pruebas en Entornos Reales</h5>
-                <p>Se sugiere realizar pruebas del sistema en escenarios de uso real para evaluar su desempeño y aceptación por parte de los usuarios.</p>
+                <p>Se sugiere realizar pruebas del sistema en escenarios de uso real para evaluar su desempeño y aceptación por parte de los usuarios. Esto permitirá identificar posibles mejoras en la experiencia del usuario y detectar limitaciones prácticas que puedan ser abordadas en futuras iteraciones.</p>
             </div>
 
             <div class="recommendation-item">
                 <h5><i class="fas fa-expand-arrows-alt"></i> Escalabilidad del Sistema</h5>
-                <p>Para futuras implementaciones, se recomienda diseñar el sistema de manera modular y escalable, permitiendo su integración con otras tecnologías biométricas.</p>
+                <p>Para futuras implementaciones, se recomienda diseñar el sistema de manera modular y escalable, permitiendo su integración con otras tecnologías biométricas, como reconocimiento de huellas dactilares o autenticación mediante voz. Esto ampliará el alcance y la aplicabilidad del sistema en distintos sectores.</p>
+            </div>
+
+            <div class="recommendation-item">
+                <h5><i class="fas fa-chalkboard-teacher"></i> Capacitación y Sensibilización de Usuarios</h5>
+                <p>Es importante educar a los usuarios sobre el funcionamiento y beneficios del reconocimiento facial como método de autenticación, así como sobre las mejores prácticas de seguridad. Esto fomentará la confianza y la correcta adopción del sistema.</p>
+            </div>
+
+            <div class="recommendation-item">
+                <h5><i class="fas fa-chart-line"></i> Monitoreo y Mantenimiento Continuo</h5>
+                <p>Se recomienda establecer un plan de monitoreo y mantenimiento para garantizar el correcto funcionamiento del sistema a lo largo del tiempo. Esto incluye actualizaciones de software, ajustes en los modelos biométricos y monitoreo de posibles vulnerabilidades.</p>
             </div>
         </div>
-    </section>
-
-    <!-- Referencias -->
-    <section class="py-5">
+    </section><!-- Referencias -->
+    <section id="referencias" class="py-5">
         <div class="container">
             <h2 class="section-title"><i class="fas fa-book-open"></i> Referencias</h2>
             
             <div class="reference-item">
+                <strong>Anderson, M., & García, R. (2023).</strong> Hybrid encryption schemes for biometric data protection in web systems. <em>Journal of Cybersecurity and Privacy</em>, 15(2), 89-104.
+            </div>
+
+            <div class="reference-item">
                 <strong>Chen, H., & Wang, L. (2023).</strong> Advanced preprocessing techniques for robust facial recognition systems. <em>IEEE Transactions on Pattern Analysis and Machine Intelligence</em>, 45(8), 3412-3426.
+            </div>
+
+            <div class="reference-item">
+                <strong>Hassan, A., et al. (2023).</strong> Universal design guidelines for accessible biometric authentication systems. <em>International Journal of Human-Computer Studies</em>, 178, 102-118.
             </div>
 
             <div class="reference-item">
@@ -409,11 +564,43 @@
             </div>
 
             <div class="reference-item">
+                <strong>Liu, Q., et al. (2023).</strong> Transformer-based facial landmark detection: A comprehensive evaluation. <em>Computer Vision and Image Understanding</em>, 234, 103751.
+            </div>
+
+            <div class="reference-item">
                 <strong>Martinez-Rodriguez, M., Garcia-Lopez, F., & Hernandez-Torres, E. (2022).</strong> Real-time facial landmark detection: A comprehensive evaluation. <em>Pattern Recognition Letters</em>, 158, 23-31.
             </div>
 
             <div class="reference-item">
+                <strong>Nakamoto, T., et al. (2023).</strong> Attribute-based encryption for secure biometric template storage. <em>IEEE Transactions on Information Forensics and Security</em>, 18, 4567-4580.
+            </div>
+
+            <div class="reference-item">
+                <strong>Park, S., & Kim, J. (2023).</strong> Microservices architecture for scalable biometric systems. <em>IEEE Software</em>, 40(3), 45-52.
+            </div>
+
+            <div class="reference-item">
+                <strong>Patel, K., & Sharma, N. (2023).</strong> Adaptive illumination normalization for robust facial recognition. <em>Pattern Recognition</em>, 142, 109672.
+            </div>
+
+            <div class="reference-item">
+                <strong>Rodriguez, C., et al. (2022).</strong> Docker-based deployment strategies for biometric web services. <em>Journal of Systems and Software</em>, 188, 111267.
+            </div>
+
+            <div class="reference-item">
+                <strong>Thompson, R., & Lee, S. (2023).</strong> Performance comparison of web frameworks for biometric applications. <em>Web Engineering and Technology</em>, 11(4), 234-248.
+            </div>
+
+            <div class="reference-item">
                 <strong>Wang, M., & Deng, W. (2021).</strong> Deep face recognition: A survey. <em>Neurocomputing</em>, 429, 215-244.
+            </div>
+
+            <div class="reference-item">
+                <strong>Wilson, J., & Chang, L. (2023).</strong> Adaptive user interfaces for biometric authentication systems. <em>International Journal of Human-Computer Interaction</em>, 39(8), 1567-1580.
+            </div>
+
+            <div class="reference-item">
+                <strong>Yang, K., et al. (2023).</strong> Memory-efficient image processing architectures for web-based computer vision. <em>Journal of Real-Time Image Processing</em>, 20(3), 45-58.
             </div>
 
             <div class="reference-item">
@@ -429,9 +616,7 @@
             <p>Proyecto desarrollado como solución innovadora para la seguridad digital</p>
             <p><i class="fas fa-calendar"></i> 2024 | <i class="fas fa-map-marker-alt"></i> Sistema Web con Flask y OpenCV</p>
         </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </footer>    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Smooth scrolling para los enlaces de navegación
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -439,9 +624,13 @@
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
+                    // Considerar la altura del navbar fijo
+                    const navbarHeight = document.querySelector('.navbar').offsetHeight;
+                    const targetPosition = target.offsetTop - navbarHeight - 20;
+                    
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
                     });
                 }
             });
@@ -451,20 +640,47 @@
         window.addEventListener('scroll', function() {
             let current = '';
             const sections = document.querySelectorAll('section[id]');
+            const navbarHeight = document.querySelector('.navbar').offsetHeight;
             
             sections.forEach(section => {
-                const sectionTop = section.offsetTop;
+                const sectionTop = section.offsetTop - navbarHeight - 100;
                 const sectionHeight = section.clientHeight;
-                if (scrollY >= (sectionTop - 200)) {
+                if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
                     current = section.getAttribute('id');
                 }
             });
 
-            document.querySelectorAll('.navbar-nav a').forEach(link => {
+            // Actualizar enlaces activos
+            document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
                 link.classList.remove('active');
                 if (link.getAttribute('href') === '#' + current) {
                     link.classList.add('active');
                 }
+            });
+        });
+
+        // Efecto de carga para las tarjetas
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Aplicar el observer a todas las tarjetas
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.card, .stage-card, .metric-card').forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
             });
         });
     </script>
